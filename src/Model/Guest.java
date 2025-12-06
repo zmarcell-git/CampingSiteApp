@@ -1,5 +1,7 @@
 package Model;
 
-public class Guest {
-
+public class Guest extends User {
+    public Guest(String name) {
+        super(name);
+    }
 }

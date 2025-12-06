@@ -1,5 +1,8 @@
+
 package Service;
 
-public class UserManager {
+public abstract class UserManager {
+    private User users;
 
+    public abstract void createUser();
 }
