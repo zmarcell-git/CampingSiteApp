@@ -26,8 +26,8 @@ public class Reservation {
     }
 
     // Getters és Setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public String getId() { return Id; }
+    public void setId(String id) { this.Id = id; }
 
     public LocalDate getArrival() { return arrival; }
     public void setArrival(LocalDate arrival) { this.arrival = arrival; }
@@ -35,8 +35,8 @@ public class Reservation {
     public LocalDate getDeparture() { return departure; }
     public void setDeparture(LocalDate departure) { this.departure = departure; }
 
-    public int getGuestsNumber() { return guestsNumber; }
-    public void setGuestsNumber(int guestsNumber) { this.guestsNumber = guestsNumber; }
+    public int getGuestsNumber() { return guestNumber; }
+    public void setGuestsNumber(int guestsNumber) { this.guestNumber = guestsNumber; }
 
     public Guest getGuest() { return guest; }
     public void setGuest(Guest guest) { this.guest = guest; }

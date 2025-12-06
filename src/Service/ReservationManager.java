@@ -2,6 +2,7 @@ package Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import Model.Reservation;
 
 public class ReservationManager {
     private List<Reservation> reservations;
