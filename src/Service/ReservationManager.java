@@ -30,7 +30,7 @@ public class ReservationManager {
     public void Search() {
         // Implementation for searching reservations
     }
-    
+
     public void ReservationList() {
         // Implementation for listing reservations
         for (Reservation reservation : reservations) {
@@ -39,7 +39,8 @@ public class ReservationManager {
             System.out.println("Guest name: " + reservation.getGuest().getName());
             System.out.println("Guest Number: " + reservation.getGuestsNumber());
             System.out.println("Arrival Date: " + reservation.getArrival());
-            System.out.println("Departure Date: " + reservation.getDeparture() + "\n");       
+            System.out.println("Departure Date: " + reservation.getDeparture() + "\n");
+            System.out.println("Status: "); // + reservation.getCampingSite().getStatus()    
         }
     }
 }
