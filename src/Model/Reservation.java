@@ -42,7 +42,5 @@ public class Reservation {
     public void setGuest(Guest guest) { this.guest = guest; }
 
     public CampingSite getCampingSite() { return campingSite; }
-    public void setCampingSite(CampingSite campingSite) { this.campingSite = campingSite; }
-
-    
+    public void setCampingSite(CampingSite campingSite) { this.campingSite = campingSite; }    
 }
