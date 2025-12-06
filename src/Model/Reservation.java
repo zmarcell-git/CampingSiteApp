@@ -21,8 +21,10 @@ public class Reservation {
     }
 
     public double calculatePrice() {
-        // Placeholder for price calculation logic
-        return 0.0;
+        int capacity = 0; // Need a getCapacity() method in CampingSite class
+        int intervallum = departure.getDayOfYear() - arrival.getDayOfYear();
+        double price = capacity * guestNumber * intervallum;
+        return price;
     }
 
     // Getters és Setters
