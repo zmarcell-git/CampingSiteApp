@@ -1,0 +1,32 @@
+# ------------------------
+# Java osztály fájlok
+# ------------------------
+*.class
+
+# ------------------------
+# IDE fájlok
+# ------------------------
+# IntelliJ IDEA
+/.idea/
+/*.iml
+
+# Eclipse
+/.classpath
+/.project
+/.settings/
+/bin/
+
+# VS Code
+.vscode/
+
+# ------------------------
+# OS fájlok
+# ------------------------
+.DS_Store
+Thumbs.db
+
+# ------------------------
+# Log / ideiglenes fájlok
+# ------------------------
+*.log
+*.tmp
