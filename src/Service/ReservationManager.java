@@ -20,64 +20,62 @@ public class ReservationManager implements ISearch {
         this.campingSiteManager = campingSiteManager;
     }
     
-    public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, Guest guest, CampingSite campingSite) {
+    public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, Guest guest, CampingSite campingSite) throws Exception {
         if (campingSite == null) {
             System.out.println("Finding available camping site...");
             campingSite = findAvailableCampingSite(arrival, departure, guestNumber);
         }
         if (campingSite == null) {
-            System.out.println("No available camping site found for the given criteria.");
-            return;
+            throw new Exception("No available camping site found for the given criteria.");
         }
-        reservationValidation(arrival, departure, guestNumber, campingSite);
-        // The availability check is now correctly handled by findAvailableCampingSite
-        Reservation reservation = new Reservation(arrival, departure, guestNumber, guest, campingSite, "Confirmed");
-        reservations.add(reservation);
-        System.out.println("Reservation created successfully for site: " + campingSite.getId());
+        if (reservationValidation(arrival, departure, guestNumber, campingSite)){
+            Reservation reservation = new Reservation(arrival, departure, guestNumber, guest, campingSite, "Confirmed");
+            reservations.add(reservation);
+            System.out.println("Reservation created successfully for site: " + campingSite.getId());
+        }
     }
 
-    public boolean reservationValidation(LocalDate arrival, LocalDate departure, int guestNumber, CampingSite campingSite) {
+    public boolean reservationValidation(LocalDate arrival, LocalDate departure, int guestNumber, CampingSite campingSite) throws Exception { 
         if (departure.isBefore(arrival) || departure.isEqual(arrival)) {
-            System.out.println("Error: Departure date must be after arrival date.");
-            return false;
+            throw new Exception("Error: Departure date must be after arrival date.");
         }
-
         if (guestNumber <= 0) {
-            System.out.println("Error: Number of guests must be greater than zero.");
-            return false;
+            throw new Exception("Error: Number of guests must be greater than zero.");
         }
-        
         if (guestNumber > campingSite.getCapacity()) {
-            System.out.println("Error: Number of guests exceeds camping site capacity.");
-            return false;
+            throw new Exception("Error: Number of guests exceeds camping site capacity.");
         }
         return true;
     }
 
-    public void modifyReservation(String reservationId, LocalDate newArrival, LocalDate newDeparture, int newGuestNumber, Guest guest) {
-        try {
-            for (Reservation reservation : reservations) {
-                if (reservation.getId().equals(reservationId) && reservation.getGuest().equals(guest)) {
-                    if (!reservationValidation(newArrival, newDeparture, newGuestNumber, reservation.getCampingSite())) {
-                        System.out.println("Modification failed due to validation errors.");
-                        return;
-                    }
-                    reservation.setArrival(newArrival);
-                    reservation.setDeparture(newDeparture);
-                    reservation.setGuestsNumber(newGuestNumber);
-                    System.out.println("Reservation modified successfully.");
-                    break;
-                }
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Reservation not found: " + e.getMessage());
+    public void modifyReservation(String reservationId, LocalDate newArrival, LocalDate newDeparture, int newGuestNumber, Guest guest) throws Exception {
+        Reservation reservationToModify = reservations.stream()
+                .filter(r -> r.getId().equals(reservationId) && r.getGuest().equals(guest))
+                .findFirst()
+                .orElseThrow(() -> new Exception("Reservation not found or you do not have permission to modify it."));
+
+        reservationValidation(newArrival, newDeparture, newGuestNumber, reservationToModify.getCampingSite());
+
+        // Check for availability on the new dates, excluding the current reservation from the check.
+        boolean isOverlapping = reservations.stream()
+            .filter(res -> !res.getId().equals(reservationId)) // Exclude the reservation being modified
+            .filter(res -> res.getCampingSite() != null && res.getCampingSite().getId().equals(reservationToModify.getCampingSite().getId()))
+            .anyMatch(res -> newArrival.isBefore(res.getDeparture()) && newDeparture.isAfter(res.getArrival()));
+
+        if (isOverlapping) {
+            throw new Exception("The camping site is not available for the new selected dates.");
         }
+
+        reservationToModify.setArrival(newArrival);
+        reservationToModify.setDeparture(newDeparture);
+        reservationToModify.setGuestsNumber(newGuestNumber);
+        System.out.println("Reservation modified successfully.");
     }
 
-    public void deleteReservation(String reservationId, Guest guest) {
+    public void deleteReservation(String reservationId, Guest guest) throws Exception {
         boolean removed = reservations.removeIf(reservation -> reservation.getId().equals(reservationId) && reservation.getGuest().equals(guest));
         if (!removed) {
-            System.out.println("Reservation not found for deletion.");
+            throw new Exception("Reservation not found for deletion, or you do not have permission.");
         } else {
             System.out.println("Reservation deleted successfully.");
         }

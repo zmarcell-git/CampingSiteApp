@@ -120,53 +120,82 @@ public class Main {
         }
     }
     private void startReservationProcess(String userId) {
-        System.out.println("Starting reservation process...");
-        System.out.println("Please enter reservation details.");
+        try {
+            System.out.println("Starting reservation process...");
+            System.out.println("Please enter reservation details.");
 
-        System.out.println("Arrival Date (YYYY-MM-DD): ");
-        LocalDate arrivalDate = LocalDate.parse(sc.nextLine().trim());
+            System.out.println("Arrival Date (YYYY-MM-DD): ");
+            LocalDate arrivalDate = LocalDate.parse(sc.nextLine().trim());
 
-        System.out.println("Departure Date (YYYY-MM-DD): ");
-        LocalDate departureDate = LocalDate.parse(sc.nextLine().trim());
-        
-        System.out.println("Number of Guests: ");
-        int guestNumber = Integer.parseInt(sc.nextLine().trim());
+            System.out.println("Departure Date (YYYY-MM-DD): ");
+            LocalDate departureDate = LocalDate.parse(sc.nextLine().trim());
+            
+            System.out.println("Number of Guests: ");
+            int guestNumber = Integer.parseInt(sc.nextLine().trim());
 
-        System.out.println("Camping site id (leave blank for automatic assignment): ");
-        String siteIdInput = sc.nextLine().trim();
-        CampingSite campingSite = campingSiteManager.getCampingSiteById(siteIdInput);
-        if (!siteIdInput.isEmpty()) {
-            campingSite = null;
+            System.out.println("Camping site id (leave blank for automatic assignment): ");
+            String siteIdInput = sc.nextLine().trim();
+            CampingSite campingSite = null;
+            if (!siteIdInput.isEmpty()) {
+                campingSite = campingSiteManager.getCampingSiteById(siteIdInput);
+                if (campingSite == null) {
+                    throw new Exception("Camping site with ID '" + siteIdInput + "' not found.");
+                }
+            }
+            Guest guest = (Guest) userManager.getUserById(userId);
+            reservationManager.createReservation(arrivalDate, departureDate, guestNumber, guest, campingSite);
+        } catch (java.time.format.DateTimeParseException e) {
+            System.out.println("\nError: Invalid date format. Please use YYYY-MM-DD.");
+        } catch (NumberFormatException e) {
+            System.out.println("\nError: Invalid number format for guests.");
+        } catch (Exception e) {
+            System.out.println("\nFailed to create reservation: " + e.getMessage());
         }
-        Guest guest = (Guest) userManager.getUserById(userId);
-        reservationManager.createReservation(arrivalDate, departureDate, guestNumber, guest, campingSite);
+        System.out.println("Press Enter to return to the menu...");
+        sc.nextLine();
     }
 
     public void startModificationProcess(String userId) {
-        System.out.println("Starting reservation modification process...");
-        System.out.println("Please enter the reservation ID to modify: ");
-        String reservationId = sc.nextLine().trim();
+        try {
+            System.out.println("Starting reservation modification process...");
+            System.out.println("Please enter the reservation ID to modify: ");
+            String reservationId = sc.nextLine().trim();
 
-        System.out.println("New Arrival Date (YYYY-MM-DD): ");
-        LocalDate newArrivalDate = LocalDate.parse(sc.nextLine().trim());
+            System.out.println("New Arrival Date (YYYY-MM-DD): ");
+            LocalDate newArrivalDate = LocalDate.parse(sc.nextLine().trim());
 
-        System.out.println("New Departure Date (YYYY-MM-DD): ");
-        LocalDate newDepartureDate = LocalDate.parse(sc.nextLine().trim());
-        
-        System.out.println("New Number of Guests: ");
-        int newGuestNumber = Integer.parseInt(sc.nextLine().trim());
+            System.out.println("New Departure Date (YYYY-MM-DD): ");
+            LocalDate newDepartureDate = LocalDate.parse(sc.nextLine().trim());
+            
+            System.out.println("New Number of Guests: ");
+            int newGuestNumber = Integer.parseInt(sc.nextLine().trim());
 
-        Guest guest = (Guest) userManager.getUserById(userId);
-        reservationManager.modifyReservation(reservationId, newArrivalDate, newDepartureDate, newGuestNumber, guest);
+            Guest guest = (Guest) userManager.getUserById(userId);
+            reservationManager.modifyReservation(reservationId, newArrivalDate, newDepartureDate, newGuestNumber, guest);
+        } catch (java.time.format.DateTimeParseException e) {
+            System.out.println("\nError: Invalid date format. Please use YYYY-MM-DD.");
+        } catch (NumberFormatException e) {
+            System.out.println("\nError: Invalid number format for guests.");
+        } catch (Exception e) {
+            System.out.println("\nFailed to modify reservation: " + e.getMessage());
+        }
+        System.out.println("Press Enter to return to the menu...");
+        sc.nextLine();
     }
         
     public void startDeletionProcess(String userId) {
-        System.out.println("Starting reservation deletion process...");
-        System.out.println("Please enter the reservation ID to delete: ");
-        String reservationId = sc.nextLine().trim();
+        try {
+            System.out.println("Starting reservation deletion process...");
+            System.out.println("Please enter the reservation ID to delete: ");
+            String reservationId = sc.nextLine().trim();
 
-        Guest guest = (Guest) userManager.getUserById(userId);
-        reservationManager.deleteReservation(reservationId, guest);
+            Guest guest = (Guest) userManager.getUserById(userId);
+            reservationManager.deleteReservation(reservationId, guest);
+        } catch (Exception e) {
+            System.out.println("\nFailed to delete reservation: " + e.getMessage());
+        }
+        System.out.println("Press Enter to return to the menu...");
+        sc.nextLine();
     }
 
     public void startReservationListProcess(String userId) {
