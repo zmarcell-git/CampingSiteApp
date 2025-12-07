@@ -23,6 +23,15 @@ public class CampingSiteManager implements ISearch {
         return this.campingSites;
     }
 
+    public CampingSite getCampingSiteById(String id) {
+        for (CampingSite site : campingSites) {
+            if (site.getId().equals(id)) {
+                return site;
+            }
+        }
+        return null;
+    }
+
     // TODO: needs refactoring
     private CampingSite CreateCampingSiteObject(String[] data) throws Exception {
         CampingType type = DataToType(data[0]);
