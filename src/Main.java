@@ -1,6 +1,19 @@
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.time.LocalDate;
+
+import Model.Guest;
+import Model.User;
+import Service.CampingSiteManager;
+import Service.ReservationManager;
+import Service.UserManager;
 
 public class Main {
+
+    private static ReservationManager reservationManager = new ReservationManager();
+    private static CampingSiteManager campingSiteManager = new CampingSiteManager();
+    private static UserManager userManager;
+
     public static void main(String[] args) {
         Main app = new Main();
         app.runApp();
@@ -52,12 +65,18 @@ public class Main {
     // ---- User Interfaces -- //
     private void showGuestInterface(Scanner sc) {
         System.out.println("\n--- Welcome Guest! ---");
-        sc.nextLine();
-        userMenu(sc);
+        System.out.println("Username: ");
+        String username = sc.nextLine().trim();
+        Guest guest = new Guest(username);
+        userManager.addUser(guest);
+        System.out.println("Welcome, " + guest.getName() + "!");
+        System.out.println("Press Enter to continue...");
 
+        sc.nextLine();
+        userMenu(sc, guest.getId());
     }
 
-    private void userMenu(Scanner sc) {
+    private void userMenu(Scanner sc, String userId) {
         System.out.println("\nGuest Menu:");
         System.out.println("1. Create Reservation");
         System.out.println("2. Modify Reservation");
@@ -71,6 +90,7 @@ public class Main {
             case "1":
                 // Logic for creating a reservation
                 System.out.println("Create Reservation selected.");
+                startReservationProcess(sc, userId);
                 break;
             case "2":
                 // Logic for modifying a reservation
@@ -92,7 +112,24 @@ public class Main {
                 break;
         }
     }
+    private void startReservationProcess(Scanner sc, String userId) {
+        System.out.println("Starting reservation process...");
+        System.out.println("Please enter reservation details.");
 
+        System.out.println("Arrival Date (YYYY-MM-DD): ");
+        LocalDate arrivalDate = LocalDate.parse(sc.nextLine().trim());
+
+        System.out.println("Departure Date (YYYY-MM-DD): ");
+        LocalDate departureDate = LocalDate.parse(sc.nextLine().trim());
+        
+        System.out.println("Number of Guests: ");
+        int guestNumber = Integer.parseInt(sc.nextLine().trim());
+        
+        Guest guest = (Guest) userManager.findUserById(userId);
+
+        reservationManager.createReservation(arrivalDate, departureDate, guestNumber, guest, null, null);
+    }
+    
 
     // ---- Admin Interfaces -- //
     private void showAdminInterface(Scanner sc) {

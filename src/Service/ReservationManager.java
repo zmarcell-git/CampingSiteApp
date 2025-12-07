@@ -17,9 +17,13 @@ public class ReservationManager implements ISearch {
         this.reservations = new ArrayList<>();
     }
     
-    public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, String Id, Guest guest,CampingSite campingSite, String status) {
+    public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, Guest guest,CampingSite campingSite, String status) {
+        if (departure.isBefore(arrival) || departure.isEqual(arrival)) {
+            System.out.println("Error: Departure date must be after arrival date.");
+            return;
+        }
         if (!datesOverlap(arrival, departure)) {
-            Reservation reservation = new Reservation(arrival, departure, guestNumber, Id, guest, campingSite, status);
+            Reservation reservation = new Reservation(arrival, departure, guestNumber, guest, campingSite, status);
             reservations.add(reservation);
             System.out.println("Reservation created successfully.");
         } else {
