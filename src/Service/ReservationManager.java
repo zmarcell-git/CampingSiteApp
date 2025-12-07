@@ -9,7 +9,7 @@ import Model.CampingSite;
 import Model.Guest;
 import Model.ISearch;
 import Model.Reservation;
-import Service.CampingSiteManager;
+
 
 public class ReservationManager implements ISearch {
     private List<Reservation> reservations;
@@ -25,29 +25,44 @@ public class ReservationManager implements ISearch {
             System.out.println("Finding available camping site...");
             campingSite = findAvailableCampingSite(arrival, departure, guestNumber);
         }
-        
-        if (departure.isBefore(arrival) || departure.isEqual(arrival)) {
-            System.out.println("Error: Departure date must be after arrival date.");
-            return;
-        }
-
         if (campingSite == null) {
             System.out.println("No available camping site found for the given criteria.");
             return;
         }
-
+        reservationValidation(arrival, departure, guestNumber, campingSite);
         // The availability check is now correctly handled by findAvailableCampingSite
         Reservation reservation = new Reservation(arrival, departure, guestNumber, guest, campingSite, "Confirmed");
         reservations.add(reservation);
         System.out.println("Reservation created successfully for site: " + campingSite.getId());
     }
 
+    public boolean reservationValidation(LocalDate arrival, LocalDate departure, int guestNumber, CampingSite campingSite) {
+        if (departure.isBefore(arrival) || departure.isEqual(arrival)) {
+            System.out.println("Error: Departure date must be after arrival date.");
+            return false;
+        }
+
+        if (guestNumber <= 0) {
+            System.out.println("Error: Number of guests must be greater than zero.");
+            return false;
+        }
+        
+        if (guestNumber > campingSite.getCapacity()) {
+            System.out.println("Error: Number of guests exceeds camping site capacity.");
+            return false;
+        }
+        return true;
+    }
+
     public void modifyReservation(String reservationId, LocalDate newArrival, LocalDate newDeparture, int newGuestNumber, Guest guest) {
         try {
             for (Reservation reservation : reservations) {
                 if (reservation.getId().equals(reservationId) && reservation.getGuest().equals(guest)) {
+                    if (!reservationValidation(newArrival, newDeparture, newGuestNumber, reservation.getCampingSite())) {
+                        System.out.println("Modification failed due to validation errors.");
+                        return;
+                    }
                     reservation.setArrival(newArrival);
-                    // TODO: Add validation to ensure the new dates don't conflict with other reservations.
                     reservation.setDeparture(newDeparture);
                     reservation.setGuestsNumber(newGuestNumber);
                     System.out.println("Reservation modified successfully.");

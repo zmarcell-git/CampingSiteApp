@@ -132,8 +132,9 @@ public class Main {
         CampingSite campingSite = campingSiteManager.getCampingSiteById(siteIdInput);
         if (!siteIdInput.isEmpty()) {
             campingSite = null;
+        }
         Guest guest = (Guest) userManager.getUserById(userId);
-        reservationManager.createReservation(arrivalDate, departureDate, guestNumber, guest, null);
+        reservationManager.createReservation(arrivalDate, departureDate, guestNumber, guest, campingSite);
     }
     
 
