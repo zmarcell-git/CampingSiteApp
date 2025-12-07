@@ -10,9 +10,9 @@ public class Reservation {
     private Guest guest;
     private CampingSite campingSite;
     private String status;
-    
 
-    public Reservation(LocalDate arrival, LocalDate departure, int guestNumber, Guest guest, CampingSite campingSite, String status) {
+    public Reservation(LocalDate arrival, LocalDate departure, int guestNumber, Guest guest, CampingSite campingSite,
+            String status) {
         this.arrival = arrival;
         this.departure = departure;
         this.guestNumber = guestNumber;
@@ -31,24 +31,63 @@ public class Reservation {
     }
 
     // Getters és Setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public String getId() {
+        return id;
+    }
 
-    public LocalDate getArrival() { return arrival; }
-    public void setArrival(LocalDate arrival) { this.arrival = arrival; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public LocalDate getDeparture() { return departure; }
-    public void setDeparture(LocalDate departure) { this.departure = departure; }
+    public LocalDate getArrival() {
+        return arrival;
+    }
 
-    public int getGuestsNumber() { return guestNumber; }
-    public void setGuestsNumber(int guestNumber) { this.guestNumber = guestNumber; }
+    public void setArrival(LocalDate arrival) {
+        this.arrival = arrival;
+    }
 
-    public Guest getGuest() { return guest; }
-    public void setGuest(Guest guest) { this.guest = guest; }
+    public LocalDate getDeparture() {
+        return departure;
+    }
 
-    public CampingSite getCampingSite() { return campingSite; }
-    public void setCampingSite(CampingSite campingSite) { this.campingSite = campingSite; }
+    public void setDeparture(LocalDate departure) {
+        this.departure = departure;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public int getGuestsNumber() {
+        return guestNumber;
+    }
+
+    public void setGuestsNumber(int guestNumber) {
+        this.guestNumber = guestNumber;
+    }
+
+    public Guest getGuest() {
+        return guest;
+    }
+
+    public void setGuest(Guest guest) {
+        this.guest = guest;
+    }
+
+    public CampingSite getCampingSite() {
+        return campingSite;
+    }
+
+    public void setCampingSite(CampingSite campingSite) {
+        this.campingSite = campingSite;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCampId() {
+        return this.campingSite.getId();
+    }
 }

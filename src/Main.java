@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDate;
 
+import Model.Admin;
 import Model.CampingSite;
 import Model.Guest;
 import Model.Reservation;
@@ -10,6 +11,7 @@ import Model.User;
 import Service.CampingSiteManager;
 import Service.ReservationManager;
 import Service.UserManager;
+import UI.CampingManagerUI;
 
 public class Main {
 
@@ -18,6 +20,8 @@ public class Main {
     private static UserManager userManager = new UserManager();
     private static ReservationManager reservationManager = new ReservationManager(campingSiteManager);
     private static Scanner sc = new Scanner(System.in);
+
+    private Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -51,7 +55,6 @@ public class Main {
                     break;
             }
         }
-        sc.close();
     }
 
     private void welcomeInterface() {
@@ -59,6 +62,7 @@ public class Main {
         System.out.println("Please select an option:");
         System.out.println("1. Guest");
         System.out.println("2. Admin");
+        System.out.println("exit to quit the app!");
     }
 
     private void clearConsole() {
@@ -311,7 +315,61 @@ public class Main {
     // ---- Admin Interfaces -- //
     private void showAdminInterface() {
         System.out.println("\n--- Welcome Admin! ---");
+        System.out.print("Username: ");
+        String username = sc.nextLine().trim();
+        Admin admin = new Admin(username);
+        userManager.addUser(admin);
+        System.out.println("Welcome, " + admin.getName() + "!");
+        System.out.println("Press Enter to continue...");
+
         sc.nextLine();
-        // Admin-specific logic will be implemented here.
+        adminMenu(admin);
+    }
+
+    private void adminMenu(Admin admin) {
+        boolean running = true;
+        while (running) {
+            CampingManagerUI campingManagerUI = new CampingManagerUI();
+            System.out.println("\nAdmin Menu: ");
+            System.out.println("1. Create Camping Site");
+            System.out.println("2. Modify Camping Site");
+            System.out.println("3. Delete Camping Site");
+            System.out.println("4. Show Camping Sites");
+            System.out.println("5. Show Reservations");
+            System.out.println("6. Delete Reservation");
+            System.out.println("10. Back to Main Menu");
+
+            String adminMenuOption = sc.nextLine().trim();
+            switch (adminMenuOption) {
+                case "1":
+                    campingManagerUI.CreateCampingSite();
+                    break;
+                case "2":
+                    campingManagerUI.ModifyCampingSiteUI();
+                    break;
+                case "3":
+                    campingManagerUI.deleteCampingSiteById();
+                    break;
+                case "4":
+                    campingManagerUI.showCampingSites();
+                    break;
+                case "5":
+                    reservationManager.ReservationList();
+                    break;
+                case "6":
+                    System.out.print("\nReservation ID: ");
+                    String reservationID = sc.nextLine().trim();
+                    reservationManager.deleteReservationAsAdmin(reservationID, admin);
+                    break;
+                case "10":
+                    running = false;
+                    System.out.println("Press Enter to exit...");
+                    sc.nextLine();
+                    return;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    break;
+            }
+        }
     }
 }

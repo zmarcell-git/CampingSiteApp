@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import Model.Admin;
 import Model.CampingSite;
 import Model.Guest;
 import Model.ISearch;
 import Model.Reservation;
-
+import Model.User;
 
 public class ReservationManager implements ISearch {
     private List<Reservation> reservations;
@@ -107,8 +108,8 @@ public class ReservationManager implements ISearch {
 
     private boolean datesOverlap(String siteId, LocalDate start, LocalDate end) {
         return reservations.stream()
-            .filter(res -> res.getCampingSite() != null && res.getCampingSite().getId().equals(siteId))
-            .anyMatch(res -> start.isBefore(res.getDeparture()) && end.isAfter(res.getArrival()));
+                .filter(res -> res.getCampingSite() != null && res.getCampingSite().getId().equals(siteId))
+                .anyMatch(res -> start.isBefore(res.getDeparture()) && end.isAfter(res.getArrival()));
     }
 
     private LocalDate findNextAvailableDate(CampingSite site, LocalDate afterDate, long durationInDays, String reservationIdToIgnore) {
@@ -165,15 +166,22 @@ public class ReservationManager implements ISearch {
 
         @SuppressWarnings("unchecked")
         List<T> results = (List<T>) reservations.stream()
-                .filter(reservation -> searchCriteria.getArrival() == null || searchCriteria.getArrival().equals(reservation.getArrival()))
-                .filter(reservation -> searchCriteria.getDeparture() == null || searchCriteria.getDeparture().equals(reservation.getDeparture()))
-                .filter(reservation -> searchCriteria.getGuestsNumber() == 0 || searchCriteria.getGuestsNumber() == reservation.getGuestsNumber())
-                .filter(reservation -> searchCriteria.getId() == null || searchCriteria.getId().equals(reservation.getId()))
-                .filter(reservation -> searchCriteria.getGuest() == null || searchCriteria.getGuest().equals(reservation.getGuest()))
-                .filter(reservation -> searchCriteria.getCampingSite() == null || searchCriteria.getCampingSite().equals(reservation.getCampingSite()))
-                .filter(reservation -> searchCriteria.getStatus() == null || searchCriteria.getStatus().equals(reservation.getStatus()))
+                .filter(reservation -> searchCriteria.getArrival() == null
+                        || searchCriteria.getArrival().equals(reservation.getArrival()))
+                .filter(reservation -> searchCriteria.getDeparture() == null
+                        || searchCriteria.getDeparture().equals(reservation.getDeparture()))
+                .filter(reservation -> searchCriteria.getGuestsNumber() == 0
+                        || searchCriteria.getGuestsNumber() == reservation.getGuestsNumber())
+                .filter(reservation -> searchCriteria.getId() == null
+                        || searchCriteria.getId().equals(reservation.getId()))
+                .filter(reservation -> searchCriteria.getGuest() == null
+                        || searchCriteria.getGuest().equals(reservation.getGuest()))
+                .filter(reservation -> searchCriteria.getCampingSite() == null
+                        || searchCriteria.getCampingSite().equals(reservation.getCampingSite()))
+                .filter(reservation -> searchCriteria.getStatus() == null
+                        || searchCriteria.getStatus().equals(reservation.getStatus()))
                 .collect(Collectors.toList());
-         return results;
+        return results;
     }
 
     public void ReservationList() {
@@ -187,5 +195,29 @@ public class ReservationManager implements ISearch {
             System.out.println("Departure Date: " + reservation.getDeparture());
             System.out.println("Status: " + reservation.getStatus() + "\n");
         }
+    }
+
+    public void deleteReservationAsAdmin(String reservationID, User user) {
+        // checks for permission
+        if (user instanceof Admin) {
+            for (Reservation reservation : reservations) {
+                if (reservation.getId().equals(reservationID)) {
+                    reservations.remove(reservation);
+                    System.out.println("Reservation successfully deleted!");
+                    return;
+                }
+            }
+        } else {
+            // returns if the current user does not have permission to this method
+            System.out.println("This user don't have permission to delete reservation.");
+            return;
+        }
+        // returns if there is no such reservation with this id
+        System.out.println("Reservation with this ID does not exists!");
+        return;
+    }
+
+    public List<Reservation> getReservations() {
+        return this.reservations;
     }
 }
