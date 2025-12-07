@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import Model.Admin;
 import Model.CampingSite;
+import Model.CampingType;
 import Model.Guest;
 import Model.Reservation;
 import Model.User;
@@ -22,6 +23,24 @@ public class Main {
     private static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
+        CampingSite campsite1 = new CampingSite(CampingType.CABIN, 3, 100);
+        CampingSite campsite2 = new CampingSite(CampingType.CABIN, 3, 100);
+        campingSiteManager.AddCampingSite(campsite1);
+        campingSiteManager.AddCampingSite(campsite2);
+
+        Guest g1 = new Guest("Teszt János");
+        Guest g2 = new Guest("Teszt Ilona");
+
+        try {
+            reservationManager.createReservation(LocalDate.parse("2025-10-19"), LocalDate.parse("2025-11-01"), 3, g2,
+                    campsite1);
+
+            reservationManager.createReservation(LocalDate.parse("2025-04-14"), LocalDate.parse("2025-04-20"), 3, g1,
+                    campsite1);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
         Main app = new Main();
         app.runApp();
     }
@@ -115,7 +134,7 @@ public class Main {
                 startReservationListProcess(userId);
                 break;
             case "5":
-                // Logic for searching 
+                // Logic for searching
                 startSearch(userId);
                 break;
             case "6":
@@ -128,6 +147,7 @@ public class Main {
                 break;
         }
     }
+
     private void startReservationProcess(String userId) {
         try {
             System.out.println("Starting reservation process...");
@@ -138,7 +158,7 @@ public class Main {
 
             System.out.println("Departure Date (YYYY-MM-DD): ");
             LocalDate departureDate = LocalDate.parse(sc.nextLine().trim());
-            
+
             System.out.println("Number of Guests: ");
             int guestNumber = Integer.parseInt(sc.nextLine().trim());
 
@@ -175,18 +195,20 @@ public class Main {
 
             System.out.println("New Departure Date (YYYY-MM-DD): ");
             LocalDate newDepartureDate = LocalDate.parse(sc.nextLine().trim());
-            
+
             System.out.println("New Number of Guests: ");
             int newGuestNumber = Integer.parseInt(sc.nextLine().trim());
 
             Guest guest = (Guest) userManager.getUserById(userId);
-            reservationManager.modifyReservation(reservationId, newArrivalDate, newDepartureDate, newGuestNumber, guest);
+            reservationManager.modifyReservation(reservationId, newArrivalDate, newDepartureDate, newGuestNumber,
+                    guest);
         } catch (java.time.format.DateTimeParseException e) {
             System.out.println("\nError: Invalid date format. Please use YYYY-MM-DD.");
         } catch (NumberFormatException e) {
             System.out.println("\nError: Invalid number format for guests.");
         } catch (Exception e) {
-            // The manager prints suggestions for booking conflicts. Avoid printing a redundant message.
+            // The manager prints suggestions for booking conflicts. Avoid printing a
+            // redundant message.
             if (!e.getMessage().startsWith("Booking conflict")) {
                 System.out.println("\nFailed to modify reservation: " + e.getMessage());
             }
@@ -194,7 +216,7 @@ public class Main {
         System.out.println("Press Enter to return to the menu...");
         sc.nextLine();
     }
-        
+
     public void startDeletionProcess(String userId) {
         try {
             System.out.println("Starting reservation deletion process...");
@@ -213,7 +235,7 @@ public class Main {
     public void startReservationListProcess(String userId) {
         System.out.println("Starting reservation list process...");
         reservationManager.ReservationList();
-        //press enter to return to main menu
+        // press enter to return to main menu
         sc.nextLine();
         userMenu(userId);
     }
@@ -254,7 +276,7 @@ public class Main {
             System.out.println("Departure Date (YYYY-MM-DD): ");
             String departureInput = sc.nextLine().trim();
             LocalDate departureDate = departureInput.isEmpty() ? null : LocalDate.parse(departureInput);
-            
+
             System.out.println("Number of Guests: ");
             String guestNumberInput = sc.nextLine().trim();
             int guestNumber = guestNumberInput.isEmpty() ? 0 : Integer.parseInt(guestNumberInput);
@@ -266,9 +288,9 @@ public class Main {
             for (Object res : results) {
                 Reservation reservation = (Reservation) res;
                 System.out.println("Reservation ID: " + reservation.getId() +
-                                   ", Arrival: " + reservation.getArrival() +
-                                   ", Departure: " + reservation.getDeparture() +
-                                   ", Guests: " + reservation.getGuestsNumber());
+                        ", Arrival: " + reservation.getArrival() +
+                        ", Departure: " + reservation.getDeparture() +
+                        ", Guests: " + reservation.getGuestsNumber());
             }
         } catch (java.time.format.DateTimeParseException e) {
             System.out.println("\nError: Invalid date format. Please use YYYY-MM-DD.");
@@ -298,8 +320,8 @@ public class Main {
 
             // Implement camping site search logic here using the criteria
             System.out.println("Searching Camping Sites with Type: " + typeInput +
-                               ", Minimum Capacity: " + capacity +
-                               ", Maximum Price: " + price);
+                    ", Minimum Capacity: " + capacity +
+                    ", Maximum Price: " + price);
             // For demonstration, we will just print the criteria.
         } catch (NumberFormatException e) {
             System.out.println("\nError: Invalid number format for capacity or price.");
