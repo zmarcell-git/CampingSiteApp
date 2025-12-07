@@ -65,14 +65,55 @@ public class CampingSiteManager {
         }
     }
 
+    /**
+     * Provides a menu for modifying different attributes of a camping site
+     * identified by the given ID.
+     * <p>
+     * The method checks whether the camping site exists. If it does not, an error
+     * message is displayed
+     * and the method exits. Otherwise, a menu is shown where the user can choose to
+     * modify:
+     * <ul>
+     * <li>Capacity</li>
+     * <li>Price</li>
+     * <li>Status</li>
+     * <li>Amenities</li>
+     * </ul>
+     * Based on the selected option, the corresponding modification method is
+     * called.
+     *
+     * @param id The ID of the camping site to modify.
+     */
     public void ModifyCampingSiteById(String id) {
         if (findCampingSiteById(id) == null) {
             System.out.println("Nincs ilyen kempinghely!");
             return;
         }
 
-        // TODO: implement
+        System.out.println("Válasszon az alábbiak közül, hogy mit szeretne módosítani: ");
+        System.out.println(
+                "1. Kapacitás változtatása\n2. Ár változtatása\n3. Státusz változtatása\n4. Extrák változtatása");
 
+        String menuOption = sc.nextLine().trim().toLowerCase();
+
+        switch (menuOption) {
+            case "1":
+                ModifyCapacity(id);
+                break;
+            case "2":
+                ModifyPrice(id);
+                break;
+            case "3":
+                ModifyStatus(null, id); // TODO: implement user permission
+                break;
+            case "4":
+                ModifyAmenities(id);
+                break;
+            default:
+                System.out.println(
+                        "Nincs ilyen menü opció: " + menuOption + "\nKérem válasszon egy érvénye opciót!(1,2,3,4)");
+                break;
+        }
     }
 
     /**
