@@ -161,8 +161,9 @@ public class Main {
         System.out.println("1. Create Camping Site");
         System.out.println("2. Modify Camping Site");
         System.out.println("3. Delete Camping Site");
-        System.out.println("4. Show Reservations");
-        System.out.println("5. Delete Reservation");
+        System.out.println("4. Show Camping Sites");
+        System.out.println("5. Show Reservations");
+        System.out.println("6. Delete Reservation");
 
         String adminMenuOption = sc.nextLine().trim();
         switch (adminMenuOption) {
@@ -176,9 +177,12 @@ public class Main {
                 campingManagerUI.deleteCampingSiteById();
                 break;
             case "4":
-                reservationManager.ReservationList();
+                campingManagerUI.showCampingSites();
                 break;
             case "5":
+                reservationManager.ReservationList();
+                break;
+            case "6":
                 System.out.print("\nReservation ID: ");
                 String reservationID = sc.nextLine().trim();
                 reservationManager.deleteReservationAsAdmin(reservationID, admin);

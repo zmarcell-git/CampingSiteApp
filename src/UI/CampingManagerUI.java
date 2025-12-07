@@ -1,5 +1,6 @@
 package UI;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import Model.CampingSite;
@@ -148,6 +149,16 @@ public class CampingManagerUI {
                 System.out.println("Nincs ilyen menüopció: " + input);
                 break;
         }
+    }
+
+    public void showCampingSites() {
+        ArrayList<CampingSite> sites = campingSiteManager.getCampingSites();
+        System.out.println("All Camping sites: ");
+        for (CampingSite campingSite : sites) {
+            System.out.println(campingSite.toString());
+        }
+        System.out.println("\nPress enter to continue...");
+        sc.nextLine();
     }
 
     // TODO: implement so it can not be deleted while its reserved!!
