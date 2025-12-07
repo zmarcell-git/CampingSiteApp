@@ -21,10 +21,10 @@ public class ReservationManager {
         reservations.add(reservation);
     }
 
-    public void modifyReservation(String reservationId, LocalDate newArrival, LocalDate newDeparture, int newGuestNumber) {
+    public void modifyReservation(String reservationId, LocalDate newArrival, LocalDate newDeparture, int newGuestNumber, Guest guest) {
         try {
             for (Reservation reservation : reservations) {
-                if (reservation.getId().equals(reservationId)) {
+                if (reservation.getId().equals(reservationId) && reservation.getGuest().equals(guest)) {
                     reservation.setArrival(newArrival);
                     reservation.setDeparture(newDeparture);
                     reservation.setGuestsNumber(newGuestNumber);
@@ -36,8 +36,11 @@ public class ReservationManager {
         }
     }
 
-    public void deleteReservation() {
-        // Implementation for deleting a reservation
+    public void deleteReservation(String reservationId, Guest guest) {
+        boolean removed = reservations.removeIf(reservation -> reservation.getId().equals(reservationId) && reservation.getGuest().equals(guest));
+        if (!removed) {
+            System.out.println("Reservation not found for deletion.");
+        }
     }
 
     public void datesOverlap() {
