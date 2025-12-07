@@ -3,7 +3,6 @@ package Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import Model.CampingSite;
@@ -12,8 +11,6 @@ import Model.ISearch;
 
 public class CampingSiteManager implements ISearch {
     private ArrayList<CampingSite> campingSites = new ArrayList<CampingSite>();
-
-    Scanner sc = new Scanner(System.in);
 
     public void CreateCampingSite(String[] data) throws Exception {
         campingSites.add(CreateCampingSiteObject(data));
