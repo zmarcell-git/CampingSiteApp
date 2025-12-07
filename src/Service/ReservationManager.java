@@ -29,6 +29,9 @@ public class ReservationManager implements ISearch {
         if (campingSite == null) {
             throw new Exception("No available camping site found for the given criteria.");
         }
+        if (datesOverlap(campingSite.getId(), arrival, departure)) {
+            throw new Exception("Dates overlap with an existing reservation.");
+        }
         if (reservationValidation(arrival, departure, guestNumber, campingSite)){
             Reservation reservation = new Reservation(arrival, departure, guestNumber, guest, campingSite, "Confirmed");
             reservations.add(reservation);

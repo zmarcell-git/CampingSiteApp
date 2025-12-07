@@ -98,10 +98,13 @@ public class Main {
         System.out.println("Press Enter to continue...");
 
         sc.nextLine();
-        userMenu(guest.getId());
+        boolean stayInMenu = true;
+        while (stayInMenu) {
+            stayInMenu = userMenu(guest.getId());
+        }
     }
 
-    private void userMenu(String userId) {
+    private boolean userMenu(String userId) {
         System.out.println("\nGuest Menu:");
         System.out.println("1. Create Reservation");
         System.out.println("2. Modify Reservation");
@@ -114,37 +117,31 @@ public class Main {
 
         switch (choice) {
             case "1":
-                // Logic for creating a reservation
                 System.out.println("Create Reservation selected.");
                 startReservationProcess(userId);
-                break;
+                return true; // Stay in guest menu
             case "2":
-                // Logic for modifying a reservation
                 System.out.println("Modify Reservation selected.");
                 startModificationProcess(userId);
-                break;
+                return true; // Stay in guest menu
             case "3":
-                // Logic for deleting a reservation
                 System.out.println("Delete Reservation selected.");
                 startDeletionProcess(userId);
-                break;
+                return true; // Stay in guest menu
             case "4":
-                // Logic for viewing reservations
                 System.out.println("View Reservations selected.");
                 startReservationListProcess(userId);
-                break;
+                return true; // Stay in guest menu
             case "5":
                 // Logic for searching
                 startSearch(userId);
-                break;
+                return true; // Stay in guest menu
             case "6":
-                // Back to main menu
                 System.out.println("Returning to Main Menu.");
-                // No need to call runApp() here, as the outer loop will handle it.
-                return;
+                return false; // Exit guest menu
             default:
                 System.out.println("Invalid option. Please try again.");
-                break;
+                return true; // Stay in guest menu
         }
     }
 
@@ -235,9 +232,9 @@ public class Main {
     public void startReservationListProcess(String userId) {
         System.out.println("Starting reservation list process...");
         reservationManager.ReservationList();
-        // press enter to return to main menu
+        System.out.println("Press Enter to return to the menu...");
         sc.nextLine();
-        userMenu(userId);
+        // The recursive call to userMenu(userId) is removed. The loop in showGuestInterface handles returning to the menu.
     }
 
     public void startSearch(String userId) {
