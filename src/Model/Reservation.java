@@ -21,7 +21,7 @@ public class Reservation {
     }
 
     public double calculatePrice() {
-        int capacity = 0; // Need a getCapacity() method in CampingSite class
+        int capacity = campingSite.getCapacity();
         int intervallum = departure.getDayOfYear() - arrival.getDayOfYear();
         double price = capacity * guestNumber * intervallum;
         return price;

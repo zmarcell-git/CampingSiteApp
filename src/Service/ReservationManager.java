@@ -1,6 +1,5 @@
 package Service;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,12 +62,12 @@ public class ReservationManager {
         // Implementation for listing reservations
         for (Reservation reservation : reservations) {
             System.out.println("Reservation ID: " + reservation.getId());
-            System.out.println("Camping Site ID: "); // + reservation.getCampingSite().getId()
+            System.out.println("Camping Site ID: " + reservation.getCampingSite().getId());
             System.out.println("Guest name: " + reservation.getGuest().getName());
             System.out.println("Guest Number: " + reservation.getGuestsNumber());
             System.out.println("Arrival Date: " + reservation.getArrival());
-            System.out.println("Departure Date: " + reservation.getDeparture() + "\n");
-            System.out.println("Status: "); // + reservation.getCampingSite().getStatus()    
+            System.out.println("Departure Date: " + reservation.getDeparture());
+            System.out.println("Status: " + reservation.getCampingSite().getStatus() + "\n");
         }
     }
 }
