@@ -6,9 +6,10 @@ import java.util.List;
 
 import Model.CampingSite;
 import Model.Guest;
+import Model.ISearch;
 import Model.Reservation;
 
-public class ReservationManager {
+public class ReservationManager implements ISearch {
     private List<Reservation> reservations;
 
     public ReservationManager() {
@@ -16,8 +17,12 @@ public class ReservationManager {
     }
     
     public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, String Id, Guest guest,CampingSite campingSite) {
-        Reservation reservation = new Reservation(arrival, departure, guestNumber, Id, guest, campingSite);
-        reservations.add(reservation);
+        if (!datesOverlap(arrival, departure)) {
+            Reservation reservation = new Reservation(arrival, departure, guestNumber, Id, guest, campingSite);
+            reservations.add(reservation);
+        } else {
+            System.out.println("The selected dates overlap with an existing reservation.");
+        }
     }
 
     public void modifyReservation(String reservationId, LocalDate newArrival, LocalDate newDeparture, int newGuestNumber, Guest guest) {
@@ -44,17 +49,17 @@ public class ReservationManager {
         }
     }
 
-    public void datesOverlap(LocalDate start, LocalDate end) {
+    public boolean datesOverlap(LocalDate start, LocalDate end) {
         for (Reservation reservation : reservations) {
             if (start.isBefore(reservation.getDeparture()) && end.isAfter(reservation.getArrival())) {
-                System.out.println("The given dates overlap with an existing reservation.");
-                return;
+                return true;
             }
-        }
-        System.out.println("The given dates do not overlap with any existing reservations.");        
+        }     
+        return false;
     }
 
-    public void Search(String reservationId, Guest guest) {
+    @Override
+    public void Search() {
         for (Reservation reservation : reservations) {
             if (reservation.getId().equals(reservationId) && reservation.getGuest().equals(guest)) {
                 System.out.println("Reservation found: " + reservationId);
