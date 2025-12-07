@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.ArrayList;
+
 /**
  * The CampingSite class represents a camping spot.
  * 
@@ -11,9 +13,9 @@ public class CampingSite {
 
     private String id;
     private CampingType type;
-    private int capacity;
+    private double capacity;
     private double price;
-    private String[] amenities;
+    private ArrayList<String> amenities = new ArrayList<String>(); // arraylast so it can grow
     private String status;
 
     /**
@@ -25,12 +27,18 @@ public class CampingSite {
      * @param amenities Array of amenities available at the site
      * @param status    Current status of the site (e.g., "available", "occupied")
      */
-    public CampingSite(CampingType type, int capacity, double price, String[] amenities, String status) {
+    public CampingSite(CampingType type, int capacity, double price, ArrayList<String> inAmenities) {
         this.id = "CampingSite" + idCounter++;
         this.type = type;
         this.capacity = capacity;
         this.price = price;
-        this.amenities = amenities;
-        this.status = status;
+        for (String string : inAmenities) {
+            amenities.add(string);
+        }
+        this.status = "Aktív";
+    }
+
+    public String getId() {
+        return this.id;
     }
 }
