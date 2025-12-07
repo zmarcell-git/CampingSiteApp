@@ -1,9 +1,11 @@
 
+import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDate;
 
 import Model.CampingSite;
 import Model.Guest;
+import Model.Reservation;
 import Model.User;
 import Service.CampingSiteManager;
 import Service.ReservationManager;
@@ -110,6 +112,10 @@ public class Main {
                 startReservationListProcess(userId);
                 break;
             case "5":
+                // Logic for searching 
+                startSearch(userId);
+                break;
+            case "6":
                 // Back to main menu
                 System.out.println("Returning to Main Menu.");
                 // No need to call runApp() here, as the outer loop will handle it.
@@ -204,6 +210,68 @@ public class Main {
         //press enter to return to main menu
         sc.nextLine();
         userMenu(userId);
+    }
+
+    public void startSearch(String userId) {
+        System.out.println("Starting search process...");
+        System.out.println("What would you like to search for?");
+
+        System.out.println("1. Reservation");
+        System.out.println("2. Camping Site");
+        String choice = sc.nextLine().trim();
+        switch (choice) {
+            case "1":
+                // Logic for searching reservations
+                System.out.println("Searching Reservations...");
+                StartReservationSearchProcess(userId);
+                break;
+            case "2":
+                // Logic for searching camping sites
+                System.out.println("Searching Camping Sites...");
+                // Implement camping site search logic here
+                break;
+            default:
+                System.out.println("Invalid option. Please try again.");
+                break;
+        }
+    }
+
+    public void StartReservationSearchProcess(String userId) {
+        try {
+            System.out.println("Enter search criteria (leave blank to skip a criterion):");
+
+            System.out.println("Arrival Date (YYYY-MM-DD): ");
+            String arrivalInput = sc.nextLine().trim();
+            LocalDate arrivalDate = arrivalInput.isEmpty() ? null : LocalDate.parse(arrivalInput);
+
+            System.out.println("Departure Date (YYYY-MM-DD): ");
+            String departureInput = sc.nextLine().trim();
+            LocalDate departureDate = departureInput.isEmpty() ? null : LocalDate.parse(departureInput);
+            
+            System.out.println("Number of Guests: ");
+            String guestNumberInput = sc.nextLine().trim();
+            int guestNumber = guestNumberInput.isEmpty() ? 0 : Integer.parseInt(guestNumberInput);
+
+            Reservation searchCriteria = new Reservation(arrivalDate, departureDate, guestNumber, null, null, null);
+            List<Object> results = reservationManager.search(searchCriteria);
+
+            System.out.println("Search Results:");
+            for (Object res : results) {
+                Reservation reservation = (Reservation) res;
+                System.out.println("Reservation ID: " + reservation.getId() +
+                                   ", Arrival: " + reservation.getArrival() +
+                                   ", Departure: " + reservation.getDeparture() +
+                                   ", Guests: " + reservation.getGuestsNumber());
+            }
+        } catch (java.time.format.DateTimeParseException e) {
+            System.out.println("\nError: Invalid date format. Please use YYYY-MM-DD.");
+        } catch (NumberFormatException e) {
+            System.out.println("\nError: Invalid number format for guests.");
+        } catch (Exception e) {
+            System.out.println("\nFailed to search reservations: " + e.getMessage());
+        }
+        System.out.println("Press Enter to return to the menu...");
+        sc.nextLine();
     }
 
     // ---- Admin Interfaces -- //
