@@ -11,10 +11,11 @@ import Model.ISearch;
 import Model.Reservation;
 
 public class CampingSiteManager implements ISearch {
-    private ArrayList<CampingSite> campingSites = new ArrayList<CampingSite>();
+    private ArrayList<CampingSite> campingSites;
 
-    private ReservationManager reservationManager = new ReservationManager();
-
+    public CampingSiteManager() {
+        this.campingSites = new ArrayList<>();
+    }
     // Basic getter
     public ArrayList<CampingSite> getCampingSites() {
         return this.campingSites;
@@ -164,7 +165,7 @@ public class CampingSiteManager implements ISearch {
      * 
      * @param id (String) CampingSite.id
      */
-    public void DeleteCampingSite(String id) {
+    public void DeleteCampingSite(String id, ReservationManager reservationManager) {
         CampingSite campsite = findCampingSiteById(id);
         if (campsite == null) {
             System.out.println("Nincs ilyen kempinghely!");

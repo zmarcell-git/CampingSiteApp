@@ -7,6 +7,7 @@ import Model.CampingSite;
 import Model.CampingType;
 import Model.Reservation;
 import Service.CampingSiteManager;
+import Service.ReservationManager;
 
 public class CampingManagerUI {
 
@@ -162,9 +163,9 @@ public class CampingManagerUI {
         sc.nextLine();
     }
 
-    public void deleteCampingSiteById() {
+    public void deleteCampingSiteById(ReservationManager reservationManager) {
         System.out.print("Give a camping site ID to delete camping site: ");
         String campId = sc.nextLine().trim();
-        campingSiteManager.DeleteCampingSite(campId);
+        campingSiteManager.DeleteCampingSite(campId, reservationManager);
     }
 }

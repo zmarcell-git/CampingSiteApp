@@ -21,8 +21,6 @@ public class Main {
     private static ReservationManager reservationManager = new ReservationManager(campingSiteManager);
     private static Scanner sc = new Scanner(System.in);
 
-    private Scanner sc = new Scanner(System.in);
-
     public static void main(String[] args) {
         Main app = new Main();
         app.runApp();
@@ -348,7 +346,7 @@ public class Main {
                     campingManagerUI.ModifyCampingSiteUI();
                     break;
                 case "3":
-                    campingManagerUI.deleteCampingSiteById();
+                    campingManagerUI.deleteCampingSiteById(reservationManager);
                     break;
                 case "4":
                     campingManagerUI.showCampingSites();
