@@ -86,7 +86,8 @@ public class Main {
         System.out.println("2. Modify Reservation");
         System.out.println("3. Delete Reservation");
         System.out.println("4. View Reservations");
-        System.out.println("5. Back to Main Menu");
+        System.out.println("5. Search");
+        System.out.println("6. Back to Main Menu");
         System.out.print("Please select an option: ");
         String choice = sc.nextLine().trim();
 

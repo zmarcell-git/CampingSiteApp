@@ -32,6 +32,7 @@ public class ReservationManager implements ISearch {
             Reservation reservation = new Reservation(arrival, departure, guestNumber, guest, campingSite, "Confirmed");
             reservations.add(reservation);
             System.out.println("Reservation created successfully for site: " + campingSite.getId());
+            System.out.printf("Total Price: %, .2f Ft\n", reservation.calculatePrice());
         }
     }
 
