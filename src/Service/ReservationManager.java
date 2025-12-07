@@ -54,8 +54,14 @@ public class ReservationManager {
         System.out.println("The given dates do not overlap with any existing reservations.");        
     }
 
-    public void Search() {
-        // Implementation for searching reservations
+    public void Search(String reservationId, Guest guest) {
+        for (Reservation reservation : reservations) {
+            if (reservation.getId().equals(reservationId) && reservation.getGuest().equals(guest)) {
+                System.out.println("Reservation found: " + reservationId);
+                return;
+            }
+        }
+        System.out.println("Reservation not found: " + reservationId);
     }
 
     public void ReservationList() {
