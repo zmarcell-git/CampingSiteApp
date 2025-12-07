@@ -1,7 +1,8 @@
-import java.util.ArrayList;
+
 import java.util.Scanner;
 import java.time.LocalDate;
 
+import Model.CampingSite;
 import Model.Guest;
 import Model.User;
 import Service.CampingSiteManager;
@@ -10,9 +11,10 @@ import Service.UserManager;
 
 public class Main {
 
-    private static ReservationManager reservationManager = new ReservationManager();
+    // Managers setup
     private static CampingSiteManager campingSiteManager = new CampingSiteManager();
-    private static UserManager userManager;
+    private static UserManager userManager = new UserManager();
+    private static ReservationManager reservationManager = new ReservationManager(campingSiteManager);
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -124,10 +126,14 @@ public class Main {
         
         System.out.println("Number of Guests: ");
         int guestNumber = Integer.parseInt(sc.nextLine().trim());
-        
-        Guest guest = (Guest) userManager.findUserById(userId);
 
-        reservationManager.createReservation(arrivalDate, departureDate, guestNumber, guest, null, null);
+        System.out.println("Camping site id (leave blank for automatic assignment): ");
+        String siteIdInput = sc.nextLine().trim();
+        CampingSite campingSite = campingSiteManager.getCampingSiteById(siteIdInput);
+        if (!siteIdInput.isEmpty()) {
+            campingSite = null;
+        Guest guest = (Guest) userManager.getUserById(userId);
+        reservationManager.createReservation(arrivalDate, departureDate, guestNumber, guest, null);
     }
     
 

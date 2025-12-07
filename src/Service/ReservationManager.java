@@ -20,7 +20,7 @@ public class ReservationManager implements ISearch {
         this.campingSiteManager = campingSiteManager;
     }
     
-    public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, Guest guest, CampingSite campingSite, String status) {
+    public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, Guest guest, CampingSite campingSite) {
         if (campingSite == null) {
             System.out.println("Finding available camping site...");
             campingSite = findAvailableCampingSite(arrival, departure, guestNumber);

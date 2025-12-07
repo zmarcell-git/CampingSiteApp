@@ -15,7 +15,7 @@ public class UserManager {
         users.add(user);
     }
 
-    public User findUserById(String id) {
+    public User getUserById(String id) {
         for (User user : users) {
             if (user.getId().equals(id)) {
                 return user;
