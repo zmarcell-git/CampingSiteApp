@@ -12,6 +12,11 @@ public class CampingSiteManager {
         campingSites.add(CreateCampingSiteObject(data));
     }
 
+    // Basic getter
+    public ArrayList<CampingSite> getCampingSites() {
+        return this.campingSites;
+    }
+
     // TODO: needs refactoring
     private CampingSite CreateCampingSiteObject(String[] data) throws Exception {
         CampingType type = DataToType(data[0]);
