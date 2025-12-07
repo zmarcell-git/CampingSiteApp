@@ -9,26 +9,37 @@ import Model.CampingSite;
 import Model.Guest;
 import Model.ISearch;
 import Model.Reservation;
+import Service.CampingSiteManager;
 
 public class ReservationManager implements ISearch {
     private List<Reservation> reservations;
+    private CampingSiteManager campingSiteManager;
 
-    public ReservationManager() {
+    public ReservationManager(CampingSiteManager campingSiteManager) {
         this.reservations = new ArrayList<>();
+        this.campingSiteManager = campingSiteManager;
     }
     
-    public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, Guest guest,CampingSite campingSite, String status) {
+    public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, Guest guest, CampingSite campingSite, String status) {
+        if (campingSite == null) {
+            System.out.println("Finding available camping site...");
+            campingSite = findAvailableCampingSite(arrival, departure, guestNumber);
+        }
+        
         if (departure.isBefore(arrival) || departure.isEqual(arrival)) {
             System.out.println("Error: Departure date must be after arrival date.");
             return;
         }
-        if (!datesOverlap(arrival, departure)) {
-            Reservation reservation = new Reservation(arrival, departure, guestNumber, guest, campingSite, status);
-            reservations.add(reservation);
-            System.out.println("Reservation created successfully.");
-        } else {
-            System.out.println("The selected dates overlap with an existing reservation.");
+
+        if (campingSite == null) {
+            System.out.println("No available camping site found for the given criteria.");
+            return;
         }
+
+        // The availability check is now correctly handled by findAvailableCampingSite
+        Reservation reservation = new Reservation(arrival, departure, guestNumber, guest, campingSite, "Confirmed");
+        reservations.add(reservation);
+        System.out.println("Reservation created successfully for site: " + campingSite.getId());
     }
 
     public void modifyReservation(String reservationId, LocalDate newArrival, LocalDate newDeparture, int newGuestNumber, Guest guest) {
@@ -36,6 +47,7 @@ public class ReservationManager implements ISearch {
             for (Reservation reservation : reservations) {
                 if (reservation.getId().equals(reservationId) && reservation.getGuest().equals(guest)) {
                     reservation.setArrival(newArrival);
+                    // TODO: Add validation to ensure the new dates don't conflict with other reservations.
                     reservation.setDeparture(newDeparture);
                     reservation.setGuestsNumber(newGuestNumber);
                     System.out.println("Reservation modified successfully.");
@@ -56,13 +68,28 @@ public class ReservationManager implements ISearch {
         }
     }
 
-    public boolean datesOverlap(LocalDate start, LocalDate end) {
-        for (Reservation reservation : reservations) {
-            if (start.isBefore(reservation.getDeparture()) && end.isAfter(reservation.getArrival())) {
-                return true;
+    private boolean datesOverlap(String siteId, LocalDate start, LocalDate end) {
+        return reservations.stream()
+            .filter(res -> res.getCampingSite() != null && res.getCampingSite().getId().equals(siteId))
+            .anyMatch(res -> start.isBefore(res.getDeparture()) && end.isAfter(res.getArrival()));
+    }
+
+    public CampingSite findAvailableCampingSite(LocalDate arrival, LocalDate departure, int guestNumber) {
+        List<CampingSite> allSites = campingSiteManager.getCampingSites();
+        if (allSites == null) {
+            return null;
+        }
+
+        for (CampingSite site : allSites) {
+            if (site.getCapacity() >= guestNumber) {
+                // Check if this site is available for the given dates.
+                if (!datesOverlap(site.getId(), arrival, departure)) {
+                    // This site is available!
+                    return site;
+                }
             }
-        }     
-        return false;
+        }
+        return null; // No suitable site found
     }
 
     @Override
