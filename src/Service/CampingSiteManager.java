@@ -75,6 +75,18 @@ public class CampingSiteManager {
 
     }
 
+    private void ModifyCapacity(String id) {
+        CampingSite site = findCampingSiteById(id);
+        System.out.println(site.getId() + " kempinghely jelenlegi kapacitása: " + site.getCapacity());
+        String input = sc.nextLine().trim();
+        try {
+            int newCapacity = Integer.parseInt(input);
+            site.setCapacity(newCapacity);
+        } catch (NumberFormatException e) {
+            System.out.println("Kérem egész számot adjon meg a kapacitás változtatásához! " + e.getMessage());
+        }
+    }
+
     /**
      * Modifies the price of a camping site identified by the given ID.
      * <p>
@@ -108,7 +120,7 @@ public class CampingSiteManager {
      * @param curretnUser The user who is attempting to change the site's status.
      * @param id          The ID of the camping site whose status will be modified.
      */
-    public void ModifyStatus(User curretnUser, String id) {
+    private void ModifyStatus(User curretnUser, String id) {
         CampingSite site = findCampingSiteById(id);
         System.out.println("Kempinghely jelenlegi státusza: " + site.getStatus());
         System.out.print("Mire szeretné változtatni a státuszát a kempinghelynek?: ");
@@ -204,7 +216,7 @@ public class CampingSiteManager {
      * @param campId Strign Campsite.id
      * @return Returns Campsite.
      */
-    public CampingSite findCampingSiteById(String campId) {
+    private CampingSite findCampingSiteById(String campId) {
         for (CampingSite campingSite : campingSites) {
             if (campingSite.getId().equals(campId)) {
                 return campingSite;
