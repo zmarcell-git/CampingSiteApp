@@ -9,9 +9,9 @@ public class Reservation {
     private String Id;
     private Guest guest;
     private CampingSite campingSite;
-    
 
-    public Reservation(LocalDate arrival, LocalDate departure, int guestNumber, String Id, Guest guest, CampingSite campingSite) {
+    public Reservation(LocalDate arrival, LocalDate departure, int guestNumber, String Id, Guest guest,
+            CampingSite campingSite) {
         this.arrival = arrival;
         this.departure = departure;
         this.guestNumber = guestNumber;
@@ -28,21 +28,51 @@ public class Reservation {
     }
 
     // Getters és Setters
-    public String getId() { return Id; }
-    public void setId(String id) { this.Id = id; }
+    public String getId() {
+        return id;
+    }
 
-    public LocalDate getArrival() { return arrival; }
-    public void setArrival(LocalDate arrival) { this.arrival = arrival; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public LocalDate getDeparture() { return departure; }
-    public void setDeparture(LocalDate departure) { this.departure = departure; }
+    public LocalDate getArrival() {
+        return arrival;
+    }
 
-    public int getGuestsNumber() { return guestNumber; }
-    public void setGuestsNumber(int guestsNumber) { this.guestNumber = guestsNumber; }
+    public void setArrival(LocalDate arrival) {
+        this.arrival = arrival;
+    }
 
-    public Guest getGuest() { return guest; }
-    public void setGuest(Guest guest) { this.guest = guest; }
+    public LocalDate getDeparture() {
+        return departure;
+    }
 
-    public CampingSite getCampingSite() { return campingSite; }
-    public void setCampingSite(CampingSite campingSite) { this.campingSite = campingSite; }    
+    public void setDeparture(LocalDate departure) {
+        this.departure = departure;
+    }
+
+    public int getGuestsNumber() {
+        return guestsNumber;
+    }
+
+    public void setGuestsNumber(int guestsNumber) {
+        this.guestsNumber = guestsNumber;
+    }
+
+    public Guest getGuest() {
+        return guest;
+    }
+
+    public void setGuest(Guest guest) {
+        this.guest = guest;
+    }
+
+    public CampingSite getCampingSite() {
+        return campingSite;
+    }
+
+    public void setCampingSite(CampingSite campingSite) {
+        this.campingSite = campingSite;
+    }
 }
