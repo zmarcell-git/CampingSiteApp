@@ -92,6 +92,7 @@ public class ReservationManager implements ISearch {
             reservationToModify.setDeparture(newDeparture);
             reservationToModify.setGuestsNumber(newGuestNumber);
             System.out.println("Reservation modified successfully.");
+            System.out.printf("New Total Price: %, .2f Ft\n", reservationToModify.calculatePrice());
         }
     }
 
