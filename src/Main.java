@@ -97,6 +97,7 @@ public class Main {
             case "2":
                 // Logic for modifying a reservation
                 System.out.println("Modify Reservation selected.");
+                startModificationProcess(userId);
                 break;
             case "3":
                 // Logic for deleting a reservation
@@ -136,6 +137,25 @@ public class Main {
         Guest guest = (Guest) userManager.getUserById(userId);
         reservationManager.createReservation(arrivalDate, departureDate, guestNumber, guest, campingSite);
     }
+
+    public void startModificationProcess(String userId) {
+        System.out.println("Starting reservation modification process...");
+        System.out.println("Please enter the reservation ID to modify: ");
+        String reservationId = sc.nextLine().trim();
+
+        System.out.println("New Arrival Date (YYYY-MM-DD): ");
+        LocalDate newArrivalDate = LocalDate.parse(sc.nextLine().trim());
+
+        System.out.println("New Departure Date (YYYY-MM-DD): ");
+        LocalDate newDepartureDate = LocalDate.parse(sc.nextLine().trim());
+        
+        System.out.println("New Number of Guests: ");
+        int newGuestNumber = Integer.parseInt(sc.nextLine().trim());
+
+        Guest guest = (Guest) userManager.getUserById(userId);
+        reservationManager.modifyReservation(reservationId, newArrivalDate, newDepartureDate, newGuestNumber, guest);
+    }
+        
     
 
     // ---- Admin Interfaces -- //
