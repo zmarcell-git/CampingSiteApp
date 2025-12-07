@@ -17,9 +17,9 @@ public class ReservationManager implements ISearch {
         this.reservations = new ArrayList<>();
     }
     
-    public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, String Id, Guest guest,CampingSite campingSite) {
+    public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, String Id, Guest guest,CampingSite campingSite, String status) {
         if (!datesOverlap(arrival, departure)) {
-            Reservation reservation = new Reservation(arrival, departure, guestNumber, Id, guest, campingSite);
+            Reservation reservation = new Reservation(arrival, departure, guestNumber, Id, guest, campingSite, status);
             reservations.add(reservation);
             System.out.println("Reservation created successfully.");
         } else {
@@ -73,6 +73,7 @@ public class ReservationManager implements ISearch {
                 .filter(reservation -> searchCriteria.getId() == null || searchCriteria.getId().equals(reservation.getId()))
                 .filter(reservation -> searchCriteria.getGuest() == null || searchCriteria.getGuest().equals(reservation.getGuest()))
                 .filter(reservation -> searchCriteria.getCampingSite() == null || searchCriteria.getCampingSite().equals(reservation.getCampingSite()))
+                .filter(reservation -> searchCriteria.getStatus() == null || searchCriteria.getStatus().equals(reservation.getStatus()))
                 .collect(Collectors.toList());
          return results;
     }
@@ -86,7 +87,7 @@ public class ReservationManager implements ISearch {
             System.out.println("Guest Number: " + reservation.getGuestsNumber());
             System.out.println("Arrival Date: " + reservation.getArrival());
             System.out.println("Departure Date: " + reservation.getDeparture());
-            System.out.println("Status: " + reservation.getCampingSite().getStatus() + "\n");
+            System.out.println("Status: " + reservation.getStatus() + "\n");
         }
     }
 }

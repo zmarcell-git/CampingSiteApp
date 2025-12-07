@@ -9,15 +9,17 @@ public class Reservation {
     private String id;
     private Guest guest;
     private CampingSite campingSite;
+    private String status;
     
 
-    public Reservation(LocalDate arrival, LocalDate departure, int guestNumber, String id, Guest guest, CampingSite campingSite) {
+    public Reservation(LocalDate arrival, LocalDate departure, int guestNumber, String id, Guest guest, CampingSite campingSite, String status) {
         this.arrival = arrival;
         this.departure = departure;
         this.guestNumber = guestNumber;
         this.id = id;
         this.guest = guest;
         this.campingSite = campingSite;
+        this.status = status;
     }
 
     public double calculatePrice() {
@@ -44,5 +46,8 @@ public class Reservation {
     public void setGuest(Guest guest) { this.guest = guest; }
 
     public CampingSite getCampingSite() { return campingSite; }
-    public void setCampingSite(CampingSite campingSite) { this.campingSite = campingSite; }    
+    public void setCampingSite(CampingSite campingSite) { this.campingSite = campingSite; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }
