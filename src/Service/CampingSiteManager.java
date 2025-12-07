@@ -1,6 +1,7 @@
 package Service;
 
-import java.text.ParseException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -158,6 +159,82 @@ public class CampingSiteManager {
         } catch (NumberFormatException e) {
             System.err.println("Nem megfelelő formátumba megadott ár! " + e.getMessage());
         }
+    }
+
+    /**
+     * Sets the site pricing dynamic with helper methods. Find the site by id.
+     * 
+     * @param id given id to find the site
+     */
+    public void setPricingToDynamic(String id) {
+        CampingSite site = findCampingSiteById(id);
+        System.out.println("Adja meg milyenre akarja változtatni az árazást: ");
+        System.out.println("1. Fix árazás\n2. Extráktól függő árazás\n3. Szezonális árazás");
+        String input = sc.nextLine();
+        switch (input) {
+            case "1":
+                SiteFixPricing(site);
+                break;
+            case "2":
+                SitePricingToGrowWithAmenities(site);
+                break;
+            case "3":
+                SitePricingSeasonal(site);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Sets pricing of the given site seasonal
+     * 
+     * @param site the site which needs to be changed
+     */
+    private void SitePricingSeasonal(CampingSite site) {
+        // TODO: implement
+    }
+
+    /**
+     * Decide from the local date wether is in the summer season or not
+     * 
+     * @param date the date to found out if its in the season
+     * @return returns true if the date in the season; otherwise false
+     */
+    private boolean isInSeason(LocalDate date) {
+        int month = date.getMonthValue();
+
+        if (month >= 6 && month <= 8) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Sets a basic fix pricing for the given site object
+     * 
+     * @param site the object which has to be changed
+     */
+    private void SiteFixPricing(CampingSite site) {
+        System.out.print("Mennyi legyen az új ára a kempinghelynek? ");
+        String input = sc.nextLine().trim();
+        double newprice = Integer.parseInt(input);
+        site.setPrice(newprice);
+        System.out.println("Ár sikeresen változtatva: " + site.getId() + " kempinghely ára: " + site.getPrice());
+    }
+
+    /**
+     * Sets the pricing grow with the amount of amenities does the site has
+     * 
+     * @param site site to be changed
+     */
+    private void SitePricingToGrowWithAmenities(CampingSite site) {
+        double price = 500;
+        price = price + (100 * site.getAmenities().size());
+        site.setPrice(price);
+        System.out.println(site.getId() + " kempinghely új árazása: " + site.getPrice()
+                + "/éj az extrák mennyisége miatt: " + site.getAmenities().size());
     }
 
     /**
