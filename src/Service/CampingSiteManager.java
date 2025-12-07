@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import Model.CampingSite;
 import Model.CampingType;
+import Model.User;
 
 public class CampingSiteManager {
     private ArrayList<CampingSite> campingSites = new ArrayList<CampingSite>();
@@ -71,6 +72,29 @@ public class CampingSiteManager {
 
         // TODO: implement
 
+    }
+
+    /**
+     * Modifies the status of a camping site identified by the given ID.
+     * <p>
+     * The method retrieves the camping site, displays its current status,
+     * then asks the user to enter a new status. It attempts to update the status
+     * using the provided user object for permission checking. If an error occurs
+     * during the update, the exception message is displayed.
+     *
+     * @param curretnUser The user who is attempting to change the site's status.
+     * @param id          The ID of the camping site whose status will be modified.
+     */
+    public void ModifyStatus(User curretnUser, String id) {
+        CampingSite site = findCampingSiteById(id);
+        System.out.println("Kempinghely jelenlegi státusza: " + site.getStatus());
+        System.out.print("Mire szeretné változtatni a státuszát a kempinghelynek?: ");
+        String newStatus = sc.nextLine().trim().toLowerCase();
+        try {
+            site.setStatus(curretnUser, newStatus);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
