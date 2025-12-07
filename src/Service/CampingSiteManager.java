@@ -16,6 +16,7 @@ public class CampingSiteManager implements ISearch {
     public CampingSiteManager() {
         this.campingSites = new ArrayList<>();
     }
+
     // Basic getter
     public ArrayList<CampingSite> getCampingSites() {
         return this.campingSites;
@@ -41,6 +42,10 @@ public class CampingSiteManager implements ISearch {
         CampingSite campingSite = new CampingSite(type, capacity, price);
         campingSites.add(campingSite);
         System.out.println("Camping site created succesfully! " + campingSite.toString());
+    }
+
+    public void AddCampingSite(CampingSite site) {
+        campingSites.add(site);
     }
 
     /**
