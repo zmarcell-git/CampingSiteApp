@@ -38,6 +38,12 @@ public class CampingSite {
         this.status = "Aktív";
     }
 
+    @Override
+    public String toString() {
+        return "KempingID: " + this.id + " típus: " + this.type.getDescription() + " kapacitás: " + this.capacity
+                + " extrák: " + this.amenities + " státusz: " + this.status;
+    }
+
     // Basic getters
     public String getId() {
         return this.id;
@@ -77,36 +83,18 @@ public class CampingSite {
     }
 
     public void addAmenitie(String newAmenitie) {
-        // checks for input
-        if (newAmenitie == null) {
-            System.out.println("Adjon meg új extrát");
-            return;
-        }
-
-        // checks for already existing amenitie in arraylist amenities
-        for (String s : amenities) {
-            if (newAmenitie.toLowerCase().equals(s)) {
-                System.out.println("Ezt az extrát már tartalmazza az extrák listája: " + s);
-                return; // we return if its already exists
-            }
-        }
         this.amenities.add(newAmenitie);
     }
 
-    /**
-     * Basic setter for status. Only admin users can change this.
-     * 
-     * @param user      User to check for the permission
-     * @param newStatus new status String to change current status for.
-     * @throws Exception method throws exception if the user don't have permission
-     *                   to change status.
-     */
-    public void setStatus(User user, String newStatus) throws Exception {
-        // checks for admin permission so only Admin users can change the status
-        if (user instanceof Admin) {
-            this.status = newStatus;
-            return;
-        }
-        throw new Exception("A statust csak adminisztrátor tudja módosítani!");
+    public void deleteAmenities(String delAmenitie) {
+        this.amenities.remove(delAmenitie);
+    }
+
+    public void deleteAllAmenities() {
+        this.amenities.clear();
+    }
+
+    public void setStatus(String newStatus) {
+        this.status = newStatus;
     }
 }
