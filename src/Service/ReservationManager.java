@@ -21,6 +21,7 @@ public class ReservationManager implements ISearch {
         if (!datesOverlap(arrival, departure)) {
             Reservation reservation = new Reservation(arrival, departure, guestNumber, Id, guest, campingSite);
             reservations.add(reservation);
+            System.out.println("Reservation created successfully.");
         } else {
             System.out.println("The selected dates overlap with an existing reservation.");
         }
@@ -33,6 +34,7 @@ public class ReservationManager implements ISearch {
                     reservation.setArrival(newArrival);
                     reservation.setDeparture(newDeparture);
                     reservation.setGuestsNumber(newGuestNumber);
+                    System.out.println("Reservation modified successfully.");
                     break;
                 }
             }
