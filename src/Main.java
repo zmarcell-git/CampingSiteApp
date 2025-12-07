@@ -152,7 +152,6 @@ public class Main {
 
         sc.nextLine();
         adminMenu(admin);
-        // Admin-specific logic will be implemented here.
     }
 
     private void adminMenu(Admin admin) {
@@ -164,6 +163,7 @@ public class Main {
         System.out.println("4. Show Camping Sites");
         System.out.println("5. Show Reservations");
         System.out.println("6. Delete Reservation");
+        System.out.println("10. Back to Main Menu");
 
         String adminMenuOption = sc.nextLine().trim();
         switch (adminMenuOption) {
@@ -187,6 +187,8 @@ public class Main {
                 String reservationID = sc.nextLine().trim();
                 reservationManager.deleteReservationAsAdmin(reservationID, admin);
                 break;
+            case "10":
+                return;
             default:
                 System.out.println("Invalid option. Please try again.");
                 break;

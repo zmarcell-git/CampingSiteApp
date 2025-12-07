@@ -21,6 +21,9 @@ public class ReservationManager implements ISearch {
         this.campingSiteManager = campingSiteManager;
     }
 
+    public ReservationManager() {
+    }
+
     public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, Guest guest,
             CampingSite campingSite) {
         if (campingSite == null) {
@@ -168,5 +171,9 @@ public class ReservationManager implements ISearch {
         // returns if there is no such reservation with this id
         System.out.println("Reservation with this ID does not exists!");
         return;
+    }
+
+    public List<Reservation> getReservations() {
+        return this.reservations;
     }
 }

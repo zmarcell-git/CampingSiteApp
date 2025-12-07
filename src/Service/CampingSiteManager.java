@@ -8,9 +8,12 @@ import java.util.stream.Collectors;
 import Model.CampingSite;
 import Model.CampingType;
 import Model.ISearch;
+import Model.Reservation;
 
 public class CampingSiteManager implements ISearch {
     private ArrayList<CampingSite> campingSites = new ArrayList<CampingSite>();
+
+    private ReservationManager reservationManager = new ReservationManager();
 
     // Basic getter
     public ArrayList<CampingSite> getCampingSites() {
@@ -167,6 +170,13 @@ public class CampingSiteManager implements ISearch {
             System.out.println("Nincs ilyen kempinghely!");
         }
 
+        for (Reservation reservation : reservationManager.getReservations()) {
+            if (reservation.getCampId().equals(campsite.getId())) {
+                System.out.println(
+                        "Can not delete this camping site because its already reserved! " + reservation.getId());
+                return;
+            }
+        }
         campingSites.remove(campsite);
         System.out.println("Camping site successfully deleted!");
     }

@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import Model.CampingSite;
 import Model.CampingType;
+import Model.Reservation;
 import Service.CampingSiteManager;
 
 public class CampingManagerUI {
@@ -161,7 +162,6 @@ public class CampingManagerUI {
         sc.nextLine();
     }
 
-    // TODO: implement so it can not be deleted while its reserved!!
     public void deleteCampingSiteById() {
         System.out.print("Give a camping site ID to delete camping site: ");
         String campId = sc.nextLine().trim();
