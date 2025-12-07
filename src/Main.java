@@ -102,6 +102,7 @@ public class Main {
             case "3":
                 // Logic for deleting a reservation
                 System.out.println("Delete Reservation selected.");
+                startDeletionProcess(userId);
                 break;
             case "4":
                 // Logic for viewing reservations
@@ -156,7 +157,14 @@ public class Main {
         reservationManager.modifyReservation(reservationId, newArrivalDate, newDepartureDate, newGuestNumber, guest);
     }
         
-    
+    public void startDeletionProcess(String userId) {
+        System.out.println("Starting reservation deletion process...");
+        System.out.println("Please enter the reservation ID to delete: ");
+        String reservationId = sc.nextLine().trim();
+
+        Guest guest = (Guest) userManager.getUserById(userId);
+        reservationManager.deleteReservation(reservationId, guest);
+    }
 
     // ---- Admin Interfaces -- //
     private void showAdminInterface() {
