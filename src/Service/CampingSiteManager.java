@@ -2,12 +2,15 @@ package Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import Model.CampingSite;
 import Model.CampingType;
+import Model.ISearch;
 
-public class CampingSiteManager {
+public class CampingSiteManager implements ISearch {
     private ArrayList<CampingSite> campingSites = new ArrayList<CampingSite>();
 
     Scanner sc = new Scanner(System.in);
@@ -151,69 +154,6 @@ public class CampingSiteManager {
                 + site.getStatus());
     }
 
-    /**
-     * Modifies the amenities of a camping site identified by the given ID.
-     * <p>
-     * The method first attempts to find the camping site by its ID.
-     * If no site is found, an error message is displayed and the method returns.
-     * Otherwise, the current list of amenities is shown and the user can choose
-     * from
-     * three modification options:
-     * <ul>
-     * <li>Add a new amenity to the site</li>
-     * <li>Remove an existing amenity</li>
-     * <li>Clear all amenities from the site</li>
-     * </ul>
-     * Based on the user's input, the method performs the corresponding update
-     * on the site's list of amenities.
-     *
-     * @param id The ID of the camping site whose amenities should be
-     *           modified.
-     */
-    private void ModifyAmenities(String id) {
-        CampingSite site = findCampingSiteById(id);
-
-        // checks if the site is even exists
-        if (site == null) {
-            System.out.println("Nincs ilyen id-val rendelkező kempinghely!");
-            return;
-        }
-        System.out.println("Jelenlegi extrák: " + site.getAmenities());
-
-        // print the menu options
-        System.out.println("1. Új extra felvétele\n2. Meglévő extra törlése\n3. Összes extra törlése");
-        String input = sc.nextLine().trim();
-        switch (input) {
-            case "1":
-                String newAmenite = sc.nextLine().trim().toLowerCase();
-                site.addAmenitie(newAmenite);
-                break;
-            case "2":
-                String delExtra = sc.nextLine().trim().toLowerCase();
-                ArrayList<String> siteAmenities = site.getAmenities();
-                if (siteAmenities.size() == 0) {
-                    System.out.println("Ez a hely nem tartalmaz extrákat!");
-                    break;
-                }
-                if (siteAmenities.contains(delExtra)) {
-                    siteAmenities.remove(delExtra);
-                    System.out.println(delExtra + " extra sikeresen törölve!");
-                    break;
-                }
-                System.out.println("Nem található ilyen extra ezen a kempinghelyen!");
-                break;
-
-            case "3":
-                site.getAmenities().clear();
-                break;
-
-            default:
-                // if the user does not choose from an available menu option
-                System.out.println("Nincs ilyen lehetőség: " + input);
-                break;
-        }
-    }
-
     public void addAmenitieForSite(CampingSite site, String amenitie) {
         for (String s : site.getAmenities()) {
             if (s.equals(amenitie)) {
@@ -272,5 +212,20 @@ public class CampingSiteManager {
             }
         }
         return null;
+    }
+
+    @Override
+    public <T> List<T> search(Object criteria) {
+        CampingSite searchCriteria = (CampingSite) criteria;
+        @SuppressWarnings("unchecked")
+        List<T> results = (List<T>) campingSites.stream()
+                .filter(campingSite -> searchCriteria.getCampingType() == null
+                        || searchCriteria.getCampingType().equals(campingSite.getCampingType()))
+                .filter(campingSite -> searchCriteria.getCapacity() == 0
+                        || searchCriteria.getCapacity() == campingSite.getCapacity())
+                .filter(campingSite -> searchCriteria.getPrice() == 0.0
+                        || searchCriteria.getPrice() == campingSite.getPrice())
+                .collect(Collectors.toList());
+        return results;
     }
 }

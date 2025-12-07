@@ -49,7 +49,7 @@ public class CampingSite {
         return this.id;
     }
 
-    public CampingType getTCampingType() {
+    public CampingType getCampingType() {
         return this.type;
     }
 
