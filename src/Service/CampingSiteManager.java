@@ -1,11 +1,14 @@
 package Service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import Model.CampingSite;
 import Model.CampingType;
+import Model.ISearch;
 
-public class CampingSiteManager {
+public class CampingSiteManager implements ISearch {
     private ArrayList<CampingSite> campingSites = new ArrayList<CampingSite>();
 
     public void CreateCampingSite(String[] data) throws Exception {
@@ -97,5 +100,17 @@ public class CampingSiteManager {
             }
         }
         return null;
+    }
+
+    @Override
+    public <T> List<T> search(Object criteria) {
+        CampingSite searchCriteria = (CampingSite) criteria;
+        @SuppressWarnings("unchecked")
+        List<T> results = (List<T>) campingSites.stream()
+                .filter(campingSite -> searchCriteria.getCampingType() == null || searchCriteria.getCampingType().equals(campingSite.getCampingType()))
+                .filter(campingSite -> searchCriteria.getCapacity() == 0 || searchCriteria.getCapacity() == campingSite.getCapacity())
+                .filter(campingSite -> searchCriteria.getPrice() == 0.0 || searchCriteria.getPrice() == campingSite.getPrice())
+                .collect(Collectors.toList());
+        return results;
     }
 }
