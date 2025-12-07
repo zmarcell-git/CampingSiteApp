@@ -1,5 +1,6 @@
 package Service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -72,6 +73,28 @@ public class CampingSiteManager {
 
         // TODO: implement
 
+    }
+
+    /**
+     * Modifies the price of a camping site identified by the given ID.
+     * <p>
+     * The method retrieves the camping site and displays its current price.
+     * It then reads user input and attempts to convert it to a double value.
+     * If the conversion is successful, the site's price is updated.
+     * If the input is not a valid number, an error message is shown.
+     *
+     * @param id The ID of the camping site whose price will be modified.
+     */
+    private void ModifyPrice(String id) {
+        CampingSite site = findCampingSiteById(id);
+        System.out.println(site.getId() + " kempinghely jelenlegi ára: " + site.getPrice());
+        String inputPrice = sc.nextLine().trim();
+        try {
+            double newPrice = Double.parseDouble(inputPrice);
+            site.setPrice(newPrice);
+        } catch (NumberFormatException e) {
+            System.err.println("Nem megfelelő formátumba megadott ár! " + e.getMessage());
+        }
     }
 
     /**
