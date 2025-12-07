@@ -75,6 +75,16 @@ public class CampingSiteManager {
 
     }
 
+    /**
+     * Modifies the capacity of a camping site identified by the given ID.
+     * <p>
+     * The method retrieves the camping site and displays its current capacity.
+     * It then reads user input and attempts to parse it as an integer.
+     * If the input is valid, the site's capacity is updated.
+     * If the input is not a valid integer, an error message is displayed.
+     *
+     * @param id The ID of the camping site whose capacity will be modified.
+     */
     private void ModifyCapacity(String id) {
         CampingSite site = findCampingSiteById(id);
         System.out.println(site.getId() + " kempinghely jelenlegi kapacitása: " + site.getCapacity());
