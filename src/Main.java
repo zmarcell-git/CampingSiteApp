@@ -184,7 +184,10 @@ public class Main {
         } catch (NumberFormatException e) {
             System.out.println("\nError: Invalid number format for guests.");
         } catch (Exception e) {
-            System.out.println("\nFailed to modify reservation: " + e.getMessage());
+            // The manager prints suggestions for booking conflicts. Avoid printing a redundant message.
+            if (!e.getMessage().startsWith("Booking conflict")) {
+                System.out.println("\nFailed to modify reservation: " + e.getMessage());
+            }
         }
         System.out.println("Press Enter to return to the menu...");
         sc.nextLine();

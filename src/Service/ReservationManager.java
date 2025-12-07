@@ -55,22 +55,44 @@ public class ReservationManager implements ISearch {
                 .findFirst()
                 .orElseThrow(() -> new Exception("Reservation not found or you do not have permission to modify it."));
 
-        reservationValidation(newArrival, newDeparture, newGuestNumber, reservationToModify.getCampingSite());
+        CampingSite originalSite = reservationToModify.getCampingSite();
+        reservationValidation(newArrival, newDeparture, newGuestNumber, originalSite);
 
         // Check for availability on the new dates, excluding the current reservation from the check.
         boolean isOverlapping = reservations.stream()
             .filter(res -> !res.getId().equals(reservationId)) // Exclude the reservation being modified
-            .filter(res -> res.getCampingSite() != null && res.getCampingSite().getId().equals(reservationToModify.getCampingSite().getId()))
+            .filter(res -> res.getCampingSite() != null && res.getCampingSite().getId().equals(originalSite.getId()))
             .anyMatch(res -> newArrival.isBefore(res.getDeparture()) && newDeparture.isAfter(res.getArrival()));
 
         if (isOverlapping) {
-            throw new Exception("The camping site is not available for the new selected dates.");
-        }
+            System.out.println("\nModification failed: The camping site #" + originalSite.getId() + " is not available for the selected dates.");
+            System.out.println("Here are some suggestions:");
 
-        reservationToModify.setArrival(newArrival);
-        reservationToModify.setDeparture(newDeparture);
-        reservationToModify.setGuestsNumber(newGuestNumber);
-        System.out.println("Reservation modified successfully.");
+            // Suggestion 1: Alternative camping place for the same dates.
+            CampingSite alternativeSite = findAvailableCampingSite(newArrival, newDeparture, newGuestNumber);
+            if (alternativeSite != null) {
+                System.out.println("- Suggestion 1: Book a different site for the same dates.");
+                System.out.println("  An alternative available site is: #" + alternativeSite.getId());
+            } else {
+                System.out.println("- No other camping sites are available for your selected dates.");
+            }
+
+            // Suggestion 2: Alternative interval for the same camping place.
+            long duration = java.time.temporal.ChronoUnit.DAYS.between(newArrival, newDeparture);
+            LocalDate nextAvailableArrival = findNextAvailableDate(originalSite, newArrival, duration, reservationId);
+            if (nextAvailableArrival != null) {
+                LocalDate nextAvailableDeparture = nextAvailableArrival.plusDays(duration);
+                System.out.println("- Suggestion 2: Book the same site for a different time.");
+                System.out.println("  The next available slot for site #" + originalSite.getId() + " is from " + nextAvailableArrival + " to " + nextAvailableDeparture);
+            }
+            
+            throw new Exception("Booking conflict. Please see suggestions above and try again.");
+        } else {
+            reservationToModify.setArrival(newArrival);
+            reservationToModify.setDeparture(newDeparture);
+            reservationToModify.setGuestsNumber(newGuestNumber);
+            System.out.println("Reservation modified successfully.");
+        }
     }
 
     public void deleteReservation(String reservationId, Guest guest) throws Exception {
@@ -86,6 +108,36 @@ public class ReservationManager implements ISearch {
         return reservations.stream()
             .filter(res -> res.getCampingSite() != null && res.getCampingSite().getId().equals(siteId))
             .anyMatch(res -> start.isBefore(res.getDeparture()) && end.isAfter(res.getArrival()));
+    }
+
+    private LocalDate findNextAvailableDate(CampingSite site, LocalDate afterDate, long durationInDays, String reservationIdToIgnore) {
+        LocalDate potentialArrival = afterDate;
+        LocalDate searchLimit = afterDate.plusYears(1); // Search up to one year in the future
+    
+        while (potentialArrival.isBefore(searchLimit)) {
+            LocalDate potentialDeparture = potentialArrival.plusDays(durationInDays);
+            
+            // Check for overlaps, ignoring the reservation we are modifying
+            final LocalDate finalPotentialArrival = potentialArrival;
+            boolean overlaps = reservations.stream()
+                    .filter(res -> !res.getId().equals(reservationIdToIgnore))
+                    .filter(res -> res.getCampingSite() != null && res.getCampingSite().getId().equals(site.getId()))
+                    .anyMatch(res -> finalPotentialArrival.isBefore(res.getDeparture()) && potentialDeparture.isAfter(res.getArrival()));
+    
+            if (!overlaps) {
+                return potentialArrival; // Found an available slot
+            }
+    
+            // If there's an overlap, jump to the end of the conflicting reservation to optimize the search
+            potentialArrival = reservations.stream()
+                    .filter(res -> !res.getId().equals(reservationIdToIgnore))
+                    .filter(res -> res.getCampingSite() != null && res.getCampingSite().getId().equals(site.getId()))
+                    .filter(res -> finalPotentialArrival.isBefore(res.getDeparture()) && potentialDeparture.isAfter(res.getArrival()))
+                    .map(Reservation::getDeparture)
+                    .max(LocalDate::compareTo)
+                    .orElse(potentialArrival.plusDays(1)); // Fallback
+        }
+        return null; // No available date found within the next year
     }
 
     public CampingSite findAvailableCampingSite(LocalDate arrival, LocalDate departure, int guestNumber) {
