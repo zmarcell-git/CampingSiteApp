@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.List;
+
 public interface ISearch {
-    public void Search();
+    <T> List<T> search(Object criteria);
 }

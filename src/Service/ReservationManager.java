@@ -3,6 +3,7 @@ package Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import Model.CampingSite;
 import Model.Guest;
@@ -59,14 +60,19 @@ public class ReservationManager implements ISearch {
     }
 
     @Override
-    public void Search() {
-        for (Reservation reservation : reservations) {
-            if (reservation.getId().equals(reservationId) && reservation.getGuest().equals(guest)) {
-                System.out.println("Reservation found: " + reservationId);
-                return;
-            }
-        }
-        System.out.println("Reservation not found: " + reservationId);
+    public <T> List<T> search(Object criteria) {
+        Reservation searchCriteria = (Reservation) criteria;
+
+        @SuppressWarnings("unchecked")
+        List<T> results = (List<T>) reservations.stream()
+                .filter(reservation -> searchCriteria.getArrival() == null || searchCriteria.getArrival().equals(reservation.getArrival()))
+                .filter(reservation -> searchCriteria.getDeparture() == null || searchCriteria.getDeparture().equals(reservation.getDeparture()))
+                .filter(reservation -> searchCriteria.getGuestsNumber() == 0 || searchCriteria.getGuestsNumber() == reservation.getGuestsNumber())
+                .filter(reservation -> searchCriteria.getId() == null || searchCriteria.getId().equals(reservation.getId()))
+                .filter(reservation -> searchCriteria.getGuest() == null || searchCriteria.getGuest().equals(reservation.getGuest()))
+                .filter(reservation -> searchCriteria.getCampingSite() == null || searchCriteria.getCampingSite().equals(reservation.getCampingSite()))
+                .collect(Collectors.toList());
+         return results;
     }
 
     public void ReservationList() {
