@@ -111,6 +111,8 @@ public class Main {
                 break;
             case "5":
                 // Back to main menu
+                System.out.println("Returning to Main Menu.");
+                // No need to call runApp() here, as the outer loop will handle it.
                 return;
             default:
                 System.out.println("Invalid option. Please try again.");
