@@ -59,6 +59,7 @@ public class Main {
         System.out.println("Please select an option:");
         System.out.println("1. Guest");
         System.out.println("2. Admin");
+        System.out.println("exit to quit the app!");
     }
 
     private void clearConsole() {
@@ -155,43 +156,49 @@ public class Main {
     }
 
     private void adminMenu(Admin admin) {
-        CampingManagerUI campingManagerUI = new CampingManagerUI();
-        System.out.println("\nAdmin Menu: ");
-        System.out.println("1. Create Camping Site");
-        System.out.println("2. Modify Camping Site");
-        System.out.println("3. Delete Camping Site");
-        System.out.println("4. Show Camping Sites");
-        System.out.println("5. Show Reservations");
-        System.out.println("6. Delete Reservation");
-        System.out.println("10. Back to Main Menu");
+        boolean running = true;
+        while (running) {
+            CampingManagerUI campingManagerUI = new CampingManagerUI();
+            System.out.println("\nAdmin Menu: ");
+            System.out.println("1. Create Camping Site");
+            System.out.println("2. Modify Camping Site");
+            System.out.println("3. Delete Camping Site");
+            System.out.println("4. Show Camping Sites");
+            System.out.println("5. Show Reservations");
+            System.out.println("6. Delete Reservation");
+            System.out.println("10. Back to Main Menu");
 
-        String adminMenuOption = sc.nextLine().trim();
-        switch (adminMenuOption) {
-            case "1":
-                campingManagerUI.CreateCampingSite();
-                break;
-            case "2.":
-                campingManagerUI.ModifyCampingSiteUI();
-                break;
-            case "3":
-                campingManagerUI.deleteCampingSiteById();
-                break;
-            case "4":
-                campingManagerUI.showCampingSites();
-                break;
-            case "5":
-                reservationManager.ReservationList();
-                break;
-            case "6":
-                System.out.print("\nReservation ID: ");
-                String reservationID = sc.nextLine().trim();
-                reservationManager.deleteReservationAsAdmin(reservationID, admin);
-                break;
-            case "10":
-                return;
-            default:
-                System.out.println("Invalid option. Please try again.");
-                break;
+            String adminMenuOption = sc.nextLine().trim();
+            switch (adminMenuOption) {
+                case "1":
+                    campingManagerUI.CreateCampingSite();
+                    break;
+                case "2":
+                    campingManagerUI.ModifyCampingSiteUI();
+                    break;
+                case "3":
+                    campingManagerUI.deleteCampingSiteById();
+                    break;
+                case "4":
+                    campingManagerUI.showCampingSites();
+                    break;
+                case "5":
+                    reservationManager.ReservationList();
+                    break;
+                case "6":
+                    System.out.print("\nReservation ID: ");
+                    String reservationID = sc.nextLine().trim();
+                    reservationManager.deleteReservationAsAdmin(reservationID, admin);
+                    break;
+                case "10":
+                    running = false;
+                    System.out.println("Press Enter to exit...");
+                    sc.nextLine();
+                    return;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    break;
+            }
         }
     }
 }
