@@ -1,8 +1,12 @@
 package Service;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import Model.CampingSite;
+import Model.Guest;
 import Model.Reservation;
 
 public class ReservationManager {
@@ -12,14 +16,24 @@ public class ReservationManager {
         this.reservations = new ArrayList<>();
     }
     
-    public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, String Id, Object guest, Object campingSite) {
-        // Implementation for creating a reservation
-        Reservation reservation = new Reservation(arrival, departure, guestNumber, Id, (Model.Guest) guest, (Model.CampingSite) campingSite);
+    public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, String Id, Guest guest,CampingSite campingSite) {
+        Reservation reservation = new Reservation(arrival, departure, guestNumber, Id, guest, campingSite);
         reservations.add(reservation);
     }
 
-    public void modifyReservation() {
-        // Implementation for modifying a reservation
+    public void modifyReservation(String reservationId, LocalDate newArrival, LocalDate newDeparture, int newGuestNumber) {
+        try {
+            for (Reservation reservation : reservations) {
+                if (reservation.getId().equals(reservationId)) {
+                    reservation.setArrival(newArrival);
+                    reservation.setDeparture(newDeparture);
+                    reservation.setGuestsNumber(newGuestNumber);
+                    break;
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Reservation not found: " + e.getMessage());
+        }
     }
 
     public void deleteReservation() {
