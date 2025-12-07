@@ -12,10 +12,6 @@ import Model.ISearch;
 public class CampingSiteManager implements ISearch {
     private ArrayList<CampingSite> campingSites = new ArrayList<CampingSite>();
 
-    public void CreateCampingSite(String[] data) throws Exception {
-        campingSites.add(CreateCampingSiteObject(data));
-    }
-
     // Basic getter
     public ArrayList<CampingSite> getCampingSites() {
         return this.campingSites;
@@ -30,20 +26,17 @@ public class CampingSiteManager implements ISearch {
         return null;
     }
 
-    // TODO: needs refactoring
-    private CampingSite CreateCampingSiteObject(String[] data) throws Exception {
-        CampingType type = DataToType(data[0]);
-        int capacity = Integer.parseInt(data[1]);
-        double price = Double.parseDouble(data[2]);
-
-        ArrayList<String> amenities = new ArrayList<String>();
-
-        if (!data[3].isEmpty()) {
-            for (String s : data[3].split(",")) {
-                amenities.add(s.trim());
-            }
-        }
-        return new CampingSite(type, capacity, price, amenities);
+    /**
+     * Creates a camping site
+     * 
+     * @param type
+     * @param capacity
+     * @param price
+     */
+    public void CreateCampingSite(CampingType type, int capacity, double price) {
+        CampingSite campingSite = new CampingSite(type, capacity, price);
+        campingSites.add(campingSite);
+        System.out.println("Camping site created succesfully! " + campingSite.toString());
     }
 
     /**
@@ -52,33 +45,6 @@ public class CampingSiteManager implements ISearch {
     public void printCampingSites() {
         for (CampingSite site : campingSites) {
             System.out.println(site.toString());
-        }
-    }
-
-    /**
-     * Converts a given string to the corresponding CampingType enum value.
-     *
-     * <p>
-     * This method attempts to match the provided string (case-insensitively)
-     * to one of the defined values in the CampingType enum. If the input is null,
-     * the method returns null. If the input does not match any enum constant,
-     * an Exception is thrown with an informative error message.
-     * </p>
-     *
-     * @param data the string representing a camping type
-     * @return the corresponding CampingType value, or null if the input is null
-     * @throws Exception if the given string does not match any CampingType enum
-     *                   constant
-     */
-    private CampingType DataToType(String data) throws Exception {
-        if (data == null) {
-            return null;
-        }
-
-        try {
-            return CampingType.valueOf(data.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new Exception("No such a type in enum CampingSiteType: " + e.getMessage());
         }
     }
 

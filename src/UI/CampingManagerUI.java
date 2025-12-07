@@ -3,6 +3,7 @@ package UI;
 import java.util.Scanner;
 
 import Model.CampingSite;
+import Model.CampingType;
 import Service.CampingSiteManager;
 
 public class CampingManagerUI {
@@ -45,6 +46,33 @@ public class CampingManagerUI {
                 System.out.println("Nincs ilyen menüopció: " + input);
                 break;
         }
+    }
+
+    public void CreateCampingSite() {
+        CampingType type = null;
+        System.out.println("Create new Camping Site");
+        System.out.print("Site type: \n 1. Tent\n2. Caravan\n3. Cabin");
+        String typeInput = sc.nextLine().trim();
+        switch (typeInput) {
+            case "1":
+                type = CampingType.TENT;
+                break;
+            case "2":
+                type = CampingType.CARAVAN;
+                break;
+            case "3":
+                type = CampingType.CABIN;
+                break;
+            default:
+                System.out.println("Invalid site type, choose from 1-3+");
+                break;
+        }
+        System.out.print("\nCapacity: ");
+        int capacity = Integer.parseInt(sc.nextLine().trim());
+        System.out.print("\nPrice: ");
+        double price = Double.parseDouble(sc.nextLine().trim());
+
+        campingSiteManager.CreateCampingSite(type, capacity, price);
     }
 
     private void showAmenitiesUI(CampingSite site) {
