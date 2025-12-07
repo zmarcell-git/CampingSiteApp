@@ -1,4 +1,5 @@
 package Model;
+import Service.CampingSiteManager;
 
 public class Admin extends User {
     public CampingSiteManager campingSiteManager;
