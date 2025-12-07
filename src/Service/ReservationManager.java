@@ -1,5 +1,6 @@
 package Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import Model.Reservation;
@@ -11,8 +12,10 @@ public class ReservationManager {
         this.reservations = new ArrayList<>();
     }
     
-    public void createReservation() {
+    public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, String Id, Object guest, Object campingSite) {
         // Implementation for creating a reservation
+        Reservation reservation = new Reservation(arrival, departure, guestNumber, Id, (Model.Guest) guest, (Model.CampingSite) campingSite);
+        reservations.add(reservation);
     }
 
     public void modifyReservation() {
