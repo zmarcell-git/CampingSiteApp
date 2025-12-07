@@ -15,6 +15,7 @@ public class Main {
     private static CampingSiteManager campingSiteManager = new CampingSiteManager();
     private static UserManager userManager = new UserManager();
     private static ReservationManager reservationManager = new ReservationManager(campingSiteManager);
+    private static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -22,7 +23,6 @@ public class Main {
     }
 
     private void runApp() {
-        Scanner sc = new Scanner(System.in);
         String userType;
 
         while (true) {
@@ -37,10 +37,10 @@ public class Main {
 
             switch (userType) {
                 case "1":
-                    showGuestInterface(sc);
+                    showGuestInterface();
                     break; // This break exits the switch, not the while loop
                 case "2":
-                    showAdminInterface(sc);
+                    showAdminInterface();
                     break; // This break exits the switch, not the while loop
                 default:
                     System.out.println("\nInvalid input. Please enter 1, 2, or 'exit'.");
@@ -65,7 +65,7 @@ public class Main {
     }
 
     // ---- User Interfaces -- //
-    private void showGuestInterface(Scanner sc) {
+    private void showGuestInterface() {
         System.out.println("\n--- Welcome Guest! ---");
         System.out.println("Username: ");
         String username = sc.nextLine().trim();
@@ -75,10 +75,10 @@ public class Main {
         System.out.println("Press Enter to continue...");
 
         sc.nextLine();
-        userMenu(sc, guest.getId());
+        userMenu(guest.getId());
     }
 
-    private void userMenu(Scanner sc, String userId) {
+    private void userMenu(String userId) {
         System.out.println("\nGuest Menu:");
         System.out.println("1. Create Reservation");
         System.out.println("2. Modify Reservation");
@@ -92,7 +92,7 @@ public class Main {
             case "1":
                 // Logic for creating a reservation
                 System.out.println("Create Reservation selected.");
-                startReservationProcess(sc, userId);
+                startReservationProcess(userId);
                 break;
             case "2":
                 // Logic for modifying a reservation
@@ -114,7 +114,7 @@ public class Main {
                 break;
         }
     }
-    private void startReservationProcess(Scanner sc, String userId) {
+    private void startReservationProcess(String userId) {
         System.out.println("Starting reservation process...");
         System.out.println("Please enter reservation details.");
 
@@ -139,7 +139,7 @@ public class Main {
     
 
     // ---- Admin Interfaces -- //
-    private void showAdminInterface(Scanner sc) {
+    private void showAdminInterface() {
         System.out.println("\n--- Welcome Admin! ---");
         sc.nextLine();
         // Admin-specific logic will be implemented here.
