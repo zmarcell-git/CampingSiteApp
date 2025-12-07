@@ -27,15 +27,13 @@ public class CampingSite {
      * @param amenities Array of amenities available at the site
      * @param status    Current status of the site (e.g., "available", "occupied")
      */
-    public CampingSite(CampingType type, int capacity, double price, ArrayList<String> inAmenities) {
+    public CampingSite(CampingType type, int capacity, double price) {
         this.id = "CampingSite" + idCounter++;
         this.type = type;
         this.capacity = capacity;
         this.price = price;
-        for (String string : inAmenities) {
-            amenities.add(string);
-        }
-        this.status = "Aktív";
+        amenities = null;
+        this.status = "Inaktív";
     }
 
     @Override

@@ -3,13 +3,16 @@ import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDate;
 
+import Model.Admin;
 import Model.CampingSite;
+import Model.CampingType;
 import Model.Guest;
 import Model.Reservation;
 import Model.User;
 import Service.CampingSiteManager;
 import Service.ReservationManager;
 import Service.UserManager;
+import UI.CampingManagerUI;
 
 public class Main {
 
@@ -20,6 +23,24 @@ public class Main {
     private static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
+        CampingSite campsite1 = new CampingSite(CampingType.CABIN, 3, 100);
+        CampingSite campsite2 = new CampingSite(CampingType.CABIN, 3, 100);
+        campingSiteManager.AddCampingSite(campsite1);
+        campingSiteManager.AddCampingSite(campsite2);
+
+        Guest g1 = new Guest("Teszt János");
+        Guest g2 = new Guest("Teszt Ilona");
+
+        try {
+            reservationManager.createReservation(LocalDate.parse("2025-10-19"), LocalDate.parse("2025-11-01"), 3, g2,
+                    campsite1);
+
+            reservationManager.createReservation(LocalDate.parse("2025-04-14"), LocalDate.parse("2025-04-20"), 3, g1,
+                    campsite1);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
         Main app = new Main();
         app.runApp();
     }
@@ -51,7 +72,6 @@ public class Main {
                     break;
             }
         }
-        sc.close();
     }
 
     private void welcomeInterface() {
@@ -59,6 +79,7 @@ public class Main {
         System.out.println("Please select an option:");
         System.out.println("1. Guest");
         System.out.println("2. Admin");
+        System.out.println("exit to quit the app!");
     }
 
     private void clearConsole() {
@@ -112,6 +133,7 @@ public class Main {
                 startReservationListProcess(userId);
                 return true; // Stay in guest menu
             case "5":
+                // Logic for searching
                 startSearch(userId);
                 return true; // Stay in guest menu
             case "6":
@@ -122,6 +144,7 @@ public class Main {
                 return true; // Stay in guest menu
         }
     }
+
     private void startReservationProcess(String userId) {
         try {
             System.out.println("Starting reservation process...");
@@ -132,7 +155,7 @@ public class Main {
 
             System.out.println("Departure Date (YYYY-MM-DD): ");
             LocalDate departureDate = LocalDate.parse(sc.nextLine().trim());
-            
+
             System.out.println("Number of Guests: ");
             int guestNumber = Integer.parseInt(sc.nextLine().trim());
 
@@ -169,18 +192,20 @@ public class Main {
 
             System.out.println("New Departure Date (YYYY-MM-DD): ");
             LocalDate newDepartureDate = LocalDate.parse(sc.nextLine().trim());
-            
+
             System.out.println("New Number of Guests: ");
             int newGuestNumber = Integer.parseInt(sc.nextLine().trim());
 
             Guest guest = (Guest) userManager.getUserById(userId);
-            reservationManager.modifyReservation(reservationId, newArrivalDate, newDepartureDate, newGuestNumber, guest);
+            reservationManager.modifyReservation(reservationId, newArrivalDate, newDepartureDate, newGuestNumber,
+                    guest);
         } catch (java.time.format.DateTimeParseException e) {
             System.out.println("\nError: Invalid date format. Please use YYYY-MM-DD.");
         } catch (NumberFormatException e) {
             System.out.println("\nError: Invalid number format for guests.");
         } catch (Exception e) {
-            // The manager prints suggestions for booking conflicts. Avoid printing a redundant message.
+            // The manager prints suggestions for booking conflicts. Avoid printing a
+            // redundant message.
             if (!e.getMessage().startsWith("Booking conflict")) {
                 System.out.println("\nFailed to modify reservation: " + e.getMessage());
             }
@@ -188,7 +213,7 @@ public class Main {
         System.out.println("Press Enter to return to the menu...");
         sc.nextLine();
     }
-        
+
     public void startDeletionProcess(String userId) {
         try {
             System.out.println("Starting reservation deletion process...");
@@ -248,7 +273,7 @@ public class Main {
             System.out.println("Departure Date (YYYY-MM-DD): ");
             String departureInput = sc.nextLine().trim();
             LocalDate departureDate = departureInput.isEmpty() ? null : LocalDate.parse(departureInput);
-            
+
             System.out.println("Number of Guests: ");
             String guestNumberInput = sc.nextLine().trim();
             int guestNumber = guestNumberInput.isEmpty() ? 0 : Integer.parseInt(guestNumberInput);
@@ -260,9 +285,9 @@ public class Main {
             for (Object res : results) {
                 Reservation reservation = (Reservation) res;
                 System.out.println("Reservation ID: " + reservation.getId() +
-                                   ", Arrival: " + reservation.getArrival() +
-                                   ", Departure: " + reservation.getDeparture() +
-                                   ", Guests: " + reservation.getGuestsNumber());
+                        ", Arrival: " + reservation.getArrival() +
+                        ", Departure: " + reservation.getDeparture() +
+                        ", Guests: " + reservation.getGuestsNumber());
             }
         } catch (java.time.format.DateTimeParseException e) {
             System.out.println("\nError: Invalid date format. Please use YYYY-MM-DD.");
@@ -292,8 +317,8 @@ public class Main {
 
             // Implement camping site search logic here using the criteria
             System.out.println("Searching Camping Sites with Type: " + typeInput +
-                               ", Minimum Capacity: " + capacity +
-                               ", Maximum Price: " + price);
+                    ", Minimum Capacity: " + capacity +
+                    ", Maximum Price: " + price);
             // For demonstration, we will just print the criteria.
         } catch (NumberFormatException e) {
             System.out.println("\nError: Invalid number format for capacity or price.");
@@ -307,7 +332,61 @@ public class Main {
     // ---- Admin Interfaces -- //
     private void showAdminInterface() {
         System.out.println("\n--- Welcome Admin! ---");
+        System.out.print("Username: ");
+        String username = sc.nextLine().trim();
+        Admin admin = new Admin(username);
+        userManager.addUser(admin);
+        System.out.println("Welcome, " + admin.getName() + "!");
+        System.out.println("Press Enter to continue...");
+
         sc.nextLine();
-        // Admin-specific logic will be implemented here.
+        adminMenu(admin);
+    }
+
+    private void adminMenu(Admin admin) {
+        boolean running = true;
+        while (running) {
+            CampingManagerUI campingManagerUI = new CampingManagerUI();
+            System.out.println("\nAdmin Menu: ");
+            System.out.println("1. Create Camping Site");
+            System.out.println("2. Modify Camping Site");
+            System.out.println("3. Delete Camping Site");
+            System.out.println("4. Show Camping Sites");
+            System.out.println("5. Show Reservations");
+            System.out.println("6. Delete Reservation");
+            System.out.println("10. Back to Main Menu");
+
+            String adminMenuOption = sc.nextLine().trim();
+            switch (adminMenuOption) {
+                case "1":
+                    campingManagerUI.CreateCampingSite();
+                    break;
+                case "2":
+                    campingManagerUI.ModifyCampingSiteUI();
+                    break;
+                case "3":
+                    campingManagerUI.deleteCampingSiteById(reservationManager);
+                    break;
+                case "4":
+                    campingManagerUI.showCampingSites();
+                    break;
+                case "5":
+                    reservationManager.ReservationList();
+                    break;
+                case "6":
+                    System.out.print("\nReservation ID: ");
+                    String reservationID = sc.nextLine().trim();
+                    reservationManager.deleteReservationAsAdmin(reservationID, admin);
+                    break;
+                case "10":
+                    running = false;
+                    System.out.println("Press Enter to exit...");
+                    sc.nextLine();
+                    return;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    break;
+            }
+        }
     }
 }
