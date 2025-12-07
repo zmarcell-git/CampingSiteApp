@@ -228,6 +228,7 @@ public class Main {
             case "2":
                 // Logic for searching camping sites
                 System.out.println("Searching Camping Sites...");
+                StartCampingSiteSearchProcess(userId);
                 // Implement camping site search logic here
                 break;
             default:
@@ -269,6 +270,35 @@ public class Main {
             System.out.println("\nError: Invalid number format for guests.");
         } catch (Exception e) {
             System.out.println("\nFailed to search reservations: " + e.getMessage());
+        }
+        System.out.println("Press Enter to return to the menu...");
+        sc.nextLine();
+    }
+
+    public void StartCampingSiteSearchProcess(String userId) {
+        try {
+            System.out.println("Enter search criteria (leave blank to skip a criterion):");
+
+            System.out.println("Camping Type (e.g., TENT, RV, CABIN): ");
+            String typeInput = sc.nextLine().trim();
+
+            System.out.println("Minimum Capacity: ");
+            String capacityInput = sc.nextLine().trim();
+            int capacity = capacityInput.isEmpty() ? 0 : Integer.parseInt(capacityInput);
+
+            System.out.println("Maximum Price: ");
+            String priceInput = sc.nextLine().trim();
+            double price = priceInput.isEmpty() ? Double.MAX_VALUE : Double.parseDouble(priceInput);
+
+            // Implement camping site search logic here using the criteria
+            System.out.println("Searching Camping Sites with Type: " + typeInput +
+                               ", Minimum Capacity: " + capacity +
+                               ", Maximum Price: " + price);
+            // For demonstration, we will just print the criteria.
+        } catch (NumberFormatException e) {
+            System.out.println("\nError: Invalid number format for capacity or price.");
+        } catch (Exception e) {
+            System.out.println("\nFailed to search camping sites: " + e.getMessage());
         }
         System.out.println("Press Enter to return to the menu...");
         sc.nextLine();
