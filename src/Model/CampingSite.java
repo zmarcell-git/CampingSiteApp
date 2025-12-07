@@ -76,7 +76,7 @@ public class CampingSite {
         this.price = newPrice;
     }
 
-    public void addAmenities(String newAmenitie) {
+    public void addAmenitie(String newAmenitie) {
         // checks for input
         if (newAmenitie == null) {
             System.out.println("Adjon meg új extrát");
