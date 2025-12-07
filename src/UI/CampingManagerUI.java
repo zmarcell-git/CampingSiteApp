@@ -14,19 +14,19 @@ public class CampingManagerUI {
 
     public void ModifyCampingSiteUI() {
         campingSiteManager.printCampingSites(); // show all campingsites so its easier to type the id
-        System.out.print("Adja meg a kempinghely azonosítóját(ID): ");
+        System.out.print("Enter the camping site ID: ");
         String inputSiteId = sc.nextLine().trim();
 
         // check if the input was even in the list
         if (campingSiteManager.findCampingSiteById(inputSiteId) == null) {
-            System.out.println("Nincs ilyen azonosítóval kempinghely az adatbázisban!: " + inputSiteId);
+            System.out.println("There is no such camping site with this ID!: " + inputSiteId);
             return;
         }
         CampingSite campingSite = campingSiteManager.findCampingSiteById(inputSiteId);
 
-        System.out.println("\nVálasszon az alábbiak közül, hogy mit szeretne módosítani a kempinghelyen: ");
+        System.out.println("\nChoose what do you want modify in the camping site: ");
         System.out.println(
-                "1. Kapacitás változtatása\n2. Ár változtatása\n3. Státusz változtatása\n4. Extrák változtatása");
+                "1. Modify Capacity\n2. Modify Price\n3. Modify Status\n4. Modify Amenities");
         String input = sc.nextLine().trim();
 
         switch (input) {
@@ -43,7 +43,7 @@ public class CampingManagerUI {
                 showAmenitiesUI(campingSite);
                 break;
             default:
-                System.out.println("Nincs ilyen menüopció: " + input);
+                System.out.println("No such menu option: " + input);
                 break;
         }
     }
@@ -51,7 +51,7 @@ public class CampingManagerUI {
     public void CreateCampingSite() {
         CampingType type = null;
         System.out.println("Create new Camping Site");
-        System.out.print("Site type: \n 1. Tent\n2. Caravan\n3. Cabin");
+        System.out.print("Site type: \n1. Tent\n2. Caravan\n3. Cabin\n");
         String typeInput = sc.nextLine().trim();
         switch (typeInput) {
             case "1":
@@ -73,6 +73,8 @@ public class CampingManagerUI {
         double price = Double.parseDouble(sc.nextLine().trim());
 
         campingSiteManager.CreateCampingSite(type, capacity, price);
+        System.out.println("Press Enter to continue...");
+        sc.nextLine();
     }
 
     private void showAmenitiesUI(CampingSite site) {
@@ -146,5 +148,12 @@ public class CampingManagerUI {
                 System.out.println("Nincs ilyen menüopció: " + input);
                 break;
         }
+    }
+
+    // TODO: implement so it can not be deleted while its reserved!!
+    public void deleteCampingSiteById() {
+        System.out.print("Give a camping site ID to delete camping site: ");
+        String campId = sc.nextLine().trim();
+        campingSiteManager.DeleteCampingSite(campId);
     }
 }

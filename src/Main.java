@@ -9,6 +9,7 @@ import Model.User;
 import Service.CampingSiteManager;
 import Service.ReservationManager;
 import Service.UserManager;
+import UI.CampingManagerUI;
 
 public class Main {
 
@@ -150,10 +151,41 @@ public class Main {
         System.out.println("Press Enter to continue...");
 
         sc.nextLine();
-        adminMenu(admin.getId());
+        adminMenu(admin);
         // Admin-specific logic will be implemented here.
     }
 
-    private void adminMenu(String adminId) {
+    private void adminMenu(Admin admin) {
+        CampingManagerUI campingManagerUI = new CampingManagerUI();
+        System.out.println("\nAdmin Menu: ");
+        System.out.println("1. Create Camping Site");
+        System.out.println("2. Modify Camping Site");
+        System.out.println("3. Delete Camping Site");
+        System.out.println("4. Show Reservations");
+        System.out.println("5. Delete Reservation");
+
+        String adminMenuOption = sc.nextLine().trim();
+        switch (adminMenuOption) {
+            case "1":
+                campingManagerUI.CreateCampingSite();
+                break;
+            case "2.":
+                campingManagerUI.ModifyCampingSiteUI();
+                break;
+            case "3":
+                campingManagerUI.deleteCampingSiteById();
+                break;
+            case "4":
+                reservationManager.ReservationList();
+                break;
+            case "5":
+                System.out.print("\nReservation ID: ");
+                String reservationID = sc.nextLine().trim();
+                reservationManager.deleteReservationAsAdmin(reservationID, admin);
+                break;
+            default:
+                System.out.println("Invalid option. Please try again.");
+                break;
+        }
     }
 }

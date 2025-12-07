@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import Model.Admin;
 import Model.CampingSite;
 import Model.Guest;
 import Model.ISearch;
 import Model.Reservation;
-
+import Model.User;
 
 public class ReservationManager implements ISearch {
     private List<Reservation> reservations;
@@ -19,8 +20,9 @@ public class ReservationManager implements ISearch {
         this.reservations = new ArrayList<>();
         this.campingSiteManager = campingSiteManager;
     }
-    
-    public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, Guest guest, CampingSite campingSite) {
+
+    public void createReservation(LocalDate arrival, LocalDate departure, int guestNumber, Guest guest,
+            CampingSite campingSite) {
         if (campingSite == null) {
             System.out.println("Finding available camping site...");
             campingSite = findAvailableCampingSite(arrival, departure, guestNumber);
@@ -36,7 +38,8 @@ public class ReservationManager implements ISearch {
         System.out.println("Reservation created successfully for site: " + campingSite.getId());
     }
 
-    public boolean reservationValidation(LocalDate arrival, LocalDate departure, int guestNumber, CampingSite campingSite) {
+    public boolean reservationValidation(LocalDate arrival, LocalDate departure, int guestNumber,
+            CampingSite campingSite) {
         if (departure.isBefore(arrival) || departure.isEqual(arrival)) {
             System.out.println("Error: Departure date must be after arrival date.");
             return false;
@@ -46,7 +49,7 @@ public class ReservationManager implements ISearch {
             System.out.println("Error: Number of guests must be greater than zero.");
             return false;
         }
-        
+
         if (guestNumber > campingSite.getCapacity()) {
             System.out.println("Error: Number of guests exceeds camping site capacity.");
             return false;
@@ -54,11 +57,13 @@ public class ReservationManager implements ISearch {
         return true;
     }
 
-    public void modifyReservation(String reservationId, LocalDate newArrival, LocalDate newDeparture, int newGuestNumber, Guest guest) {
+    public void modifyReservation(String reservationId, LocalDate newArrival, LocalDate newDeparture,
+            int newGuestNumber, Guest guest) {
         try {
             for (Reservation reservation : reservations) {
                 if (reservation.getId().equals(reservationId) && reservation.getGuest().equals(guest)) {
-                    if (!reservationValidation(newArrival, newDeparture, newGuestNumber, reservation.getCampingSite())) {
+                    if (!reservationValidation(newArrival, newDeparture, newGuestNumber,
+                            reservation.getCampingSite())) {
                         System.out.println("Modification failed due to validation errors.");
                         return;
                     }
@@ -75,7 +80,8 @@ public class ReservationManager implements ISearch {
     }
 
     public void deleteReservation(String reservationId, Guest guest) {
-        boolean removed = reservations.removeIf(reservation -> reservation.getId().equals(reservationId) && reservation.getGuest().equals(guest));
+        boolean removed = reservations.removeIf(
+                reservation -> reservation.getId().equals(reservationId) && reservation.getGuest().equals(guest));
         if (!removed) {
             System.out.println("Reservation not found for deletion.");
         } else {
@@ -85,8 +91,8 @@ public class ReservationManager implements ISearch {
 
     private boolean datesOverlap(String siteId, LocalDate start, LocalDate end) {
         return reservations.stream()
-            .filter(res -> res.getCampingSite() != null && res.getCampingSite().getId().equals(siteId))
-            .anyMatch(res -> start.isBefore(res.getDeparture()) && end.isAfter(res.getArrival()));
+                .filter(res -> res.getCampingSite() != null && res.getCampingSite().getId().equals(siteId))
+                .anyMatch(res -> start.isBefore(res.getDeparture()) && end.isAfter(res.getArrival()));
     }
 
     public CampingSite findAvailableCampingSite(LocalDate arrival, LocalDate departure, int guestNumber) {
@@ -113,15 +119,22 @@ public class ReservationManager implements ISearch {
 
         @SuppressWarnings("unchecked")
         List<T> results = (List<T>) reservations.stream()
-                .filter(reservation -> searchCriteria.getArrival() == null || searchCriteria.getArrival().equals(reservation.getArrival()))
-                .filter(reservation -> searchCriteria.getDeparture() == null || searchCriteria.getDeparture().equals(reservation.getDeparture()))
-                .filter(reservation -> searchCriteria.getGuestsNumber() == 0 || searchCriteria.getGuestsNumber() == reservation.getGuestsNumber())
-                .filter(reservation -> searchCriteria.getId() == null || searchCriteria.getId().equals(reservation.getId()))
-                .filter(reservation -> searchCriteria.getGuest() == null || searchCriteria.getGuest().equals(reservation.getGuest()))
-                .filter(reservation -> searchCriteria.getCampingSite() == null || searchCriteria.getCampingSite().equals(reservation.getCampingSite()))
-                .filter(reservation -> searchCriteria.getStatus() == null || searchCriteria.getStatus().equals(reservation.getStatus()))
+                .filter(reservation -> searchCriteria.getArrival() == null
+                        || searchCriteria.getArrival().equals(reservation.getArrival()))
+                .filter(reservation -> searchCriteria.getDeparture() == null
+                        || searchCriteria.getDeparture().equals(reservation.getDeparture()))
+                .filter(reservation -> searchCriteria.getGuestsNumber() == 0
+                        || searchCriteria.getGuestsNumber() == reservation.getGuestsNumber())
+                .filter(reservation -> searchCriteria.getId() == null
+                        || searchCriteria.getId().equals(reservation.getId()))
+                .filter(reservation -> searchCriteria.getGuest() == null
+                        || searchCriteria.getGuest().equals(reservation.getGuest()))
+                .filter(reservation -> searchCriteria.getCampingSite() == null
+                        || searchCriteria.getCampingSite().equals(reservation.getCampingSite()))
+                .filter(reservation -> searchCriteria.getStatus() == null
+                        || searchCriteria.getStatus().equals(reservation.getStatus()))
                 .collect(Collectors.toList());
-         return results;
+        return results;
     }
 
     public void ReservationList() {
@@ -135,5 +148,25 @@ public class ReservationManager implements ISearch {
             System.out.println("Departure Date: " + reservation.getDeparture());
             System.out.println("Status: " + reservation.getStatus() + "\n");
         }
+    }
+
+    public void deleteReservationAsAdmin(String reservationID, User user) {
+        // checks for permission
+        if (user instanceof Admin) {
+            for (Reservation reservation : reservations) {
+                if (reservation.getId().equals(reservationID)) {
+                    reservations.remove(reservation);
+                    System.out.println("Reservation successfully deleted!");
+                    return;
+                }
+            }
+        } else {
+            // returns if the current user does not have permission to this method
+            System.out.println("This user don't have permission to delete reservation.");
+            return;
+        }
+        // returns if there is no such reservation with this id
+        System.out.println("Reservation with this ID does not exists!");
+        return;
     }
 }

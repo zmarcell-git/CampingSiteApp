@@ -168,6 +168,7 @@ public class CampingSiteManager implements ISearch {
         }
 
         campingSites.remove(campsite);
+        System.out.println("Camping site successfully deleted!");
     }
 
     /**
