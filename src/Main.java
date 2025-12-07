@@ -6,14 +6,7 @@ public class Main {
         app.runApp();
     }
 
-    public void welcomeInterface() {
-        System.out.println("Welcome to the Camping Reservation System!");
-        System.out.println("Please select an option:");
-        System.out.println("1. Guest");
-        System.out.println("2. Admin");
-    }
-
-    public void runApp() {
+    private void runApp() {
         Scanner sc = new Scanner(System.in);
         String userType;
 
@@ -44,16 +37,64 @@ public class Main {
         sc.close();
     }
 
+    private void welcomeInterface() {
+        System.out.println("Welcome to the Camping Reservation System!");
+        System.out.println("Please select an option:");
+        System.out.println("1. Guest");
+        System.out.println("2. Admin");
+    }
+
     private void clearConsole() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
 
+    // ---- User Interfaces -- //
     private void showGuestInterface(Scanner sc) {
         System.out.println("\n--- Welcome Guest! ---");
         sc.nextLine();
+        userMenu(sc);
+
     }
 
+    private void userMenu(Scanner sc) {
+        System.out.println("\nGuest Menu:");
+        System.out.println("1. Create Reservation");
+        System.out.println("2. Modify Reservation");
+        System.out.println("3. Delete Reservation");
+        System.out.println("4. View Reservations");
+        System.out.println("5. Back to Main Menu");
+        System.out.print("Please select an option: ");
+        String choice = sc.nextLine().trim();
+
+        switch (choice) {
+            case "1":
+                // Logic for creating a reservation
+                System.out.println("Create Reservation selected.");
+                break;
+            case "2":
+                // Logic for modifying a reservation
+                System.out.println("Modify Reservation selected.");
+                break;
+            case "3":
+                // Logic for deleting a reservation
+                System.out.println("Delete Reservation selected.");
+                break;
+            case "4":
+                // Logic for viewing reservations
+                System.out.println("View Reservations selected.");
+                break;
+            case "5":
+                // Back to main menu
+                return;
+            default:
+                System.out.println("Invalid option. Please try again.");
+                break;
+        }
+    }
+
+
+    // ---- Admin Interfaces -- //
     private void showAdminInterface(Scanner sc) {
         System.out.println("\n--- Welcome Admin! ---");
         sc.nextLine();
