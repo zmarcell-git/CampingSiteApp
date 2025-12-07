@@ -40,11 +40,19 @@ public class ReservationManager {
         boolean removed = reservations.removeIf(reservation -> reservation.getId().equals(reservationId) && reservation.getGuest().equals(guest));
         if (!removed) {
             System.out.println("Reservation not found for deletion.");
+        } else {
+            System.out.println("Reservation deleted successfully.");
         }
     }
 
-    public void datesOverlap() {
-        // Implementation for checking date overlaps
+    public void datesOverlap(LocalDate start, LocalDate end) {
+        for (Reservation reservation : reservations) {
+            if (start.isBefore(reservation.getDeparture()) && end.isAfter(reservation.getArrival())) {
+                System.out.println("The given dates overlap with an existing reservation.");
+                return;
+            }
+        }
+        System.out.println("The given dates do not overlap with any existing reservations.");        
     }
 
     public void Search() {
