@@ -107,6 +107,7 @@ public class Main {
             case "4":
                 // Logic for viewing reservations
                 System.out.println("View Reservations selected.");
+                startReservationListProcess(userId);
                 break;
             case "5":
                 // Back to main menu
@@ -164,6 +165,14 @@ public class Main {
 
         Guest guest = (Guest) userManager.getUserById(userId);
         reservationManager.deleteReservation(reservationId, guest);
+    }
+
+    public void startReservationListProcess(String userId) {
+        System.out.println("Starting reservation list process...");
+        reservationManager.ReservationList();
+        //press enter to return to main menu
+        sc.nextLine();
+        userMenu(userId);
     }
 
     // ---- Admin Interfaces -- //
